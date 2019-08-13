@@ -19,7 +19,9 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -37,11 +39,16 @@ public class opJavaTask1 {
 	private List<Object> linkedList;
 	private Map<Object, Object> hashMap;
 	private Map<Object, Object> treeMap;
+	
 	private JRadioButton rbVector;
 	private JRadioButton rbArrayList;
 	private JRadioButton rbLinkedList;
 	private JRadioButton rbHashMap;
 	private JRadioButton rbTreeMap;
+	private JTextArea textAreaCollectionInfo;
+	private JList listItemsTypes;
+	private JList listItemsFound;
+	private DefaultListModel listModelItemsFound;
 
 	/**
 	 * Launch the application.
@@ -102,7 +109,8 @@ public class opJavaTask1 {
 		scrollPane.setBounds(40, 91, 313, 185);
 		panel.add(scrollPane);
 		
-		JTextArea textAreaCollectionInfo = new JTextArea();
+		textAreaCollectionInfo = new JTextArea();
+		textAreaCollectionInfo.setEditable(false);
 		scrollPane.setViewportView(textAreaCollectionInfo);
 		
 		JPanel panel_1 = new JPanel();
@@ -162,7 +170,7 @@ public class opJavaTask1 {
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_2.add(label_1);
 		
-		JList listItemsTypes = new JList();
+		listItemsTypes = new JList();
 		listItemsTypes.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		listItemsTypes.setBounds(22, 46, 147, 115);
 		panel_2.add(listItemsTypes);
@@ -190,7 +198,8 @@ public class opJavaTask1 {
 		scrollPane_1.setBounds(87, 56, 184, 105);
 		panel_3.add(scrollPane_1);
 		
-		JList listItemsFound = new JList();
+		listModelItemsFound = new DefaultListModel();
+		listItemsFound = new JList(listModelItemsFound);
 		scrollPane_1.setViewportView(listItemsFound);
 		
 		JPanel panel_4 = new JPanel();
@@ -272,22 +281,56 @@ public class opJavaTask1 {
 			if(vector == null) {
 				vector = new Vector<>();
 			}
+			textAreaCollectionInfo.append("Vector created: empty" + vector.toString() + "\n");
 		} else if (rbArrayList.isSelected()) {
 			if(arrayList == null) {
 				arrayList = new ArrayList<>();
 			}
+			printCollectionData(arrayList, textAreaCollectionInfo);
 		} else if (rbLinkedList.isSelected()) {
 			if(linkedList == null) {
 				linkedList = new LinkedList<>();
 			}
+			printCollectionData(linkedList, textAreaCollectionInfo);
 		} else if (rbHashMap.isSelected()) {
 			if(hashMap == null) {
 				hashMap = new HashMap<>();
+				textAreaCollectionInfo.append(hashMap.toString());
 			}
 		} else if (rbTreeMap.isSelected()) {
 			if(treeMap == null) {
 				treeMap = new TreeMap<>();
 			}
 		}
+		
 	}
+	
+	
+	
+	
+	private <K, V> void printMapData(Map<K, V> c, Object o) {
+
+		for (Map.Entry<K, V> entry : c.entrySet()) {
+			
+			outputData(entry.getKey() + " : " + entry.getValue() + "\n", o);
+		}
+	}
+	private <T> void printCollectionData(Collection<T> t, Object o){
+
+		for (T item : t) {
+			outputData(item.toString() + "\n", o);
+		}
+	}
+	private void outputData(String s, Object o) {
+		if (o.getClass().getName().
+				equals(new JTextArea().getClass().getName())) {
+			JTextArea textArea = (JTextArea) o;
+			textArea.append(s);
+		} else if (o.getClass().getName().
+				equals(new DefaultListModel().getClass().getName())) {
+			DefaultListModel listModel = (DefaultListModel) o;
+			listModel.addElement(s);
+		}
+	}
+
 }
