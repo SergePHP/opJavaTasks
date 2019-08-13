@@ -21,6 +21,8 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ButtonGroup;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class opJavaTask1 {
 
@@ -35,6 +37,11 @@ public class opJavaTask1 {
 	private List<Object> linkedList;
 	private Map<Object, Object> hashMap;
 	private Map<Object, Object> treeMap;
+	private JRadioButton rbVector;
+	private JRadioButton rbArrayList;
+	private JRadioButton rbLinkedList;
+	private JRadioButton rbHashMap;
+	private JRadioButton rbTreeMap;
 
 	/**
 	 * Launch the application.
@@ -77,6 +84,11 @@ public class opJavaTask1 {
 		panel.setLayout(null);
 		
 		JButton btnCreateCollection = new JButton("Создать и отобразить коллекцию");
+		btnCreateCollection.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createCollection();
+			}
+		});
 		btnCreateCollection.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnCreateCollection.setBounds(30, 13, 382, 30);
 		panel.add(btnCreateCollection);
@@ -104,35 +116,35 @@ public class opJavaTask1 {
 		label.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_1.add(label);
 		
-		JRadioButton rbVector = new JRadioButton("Vector");
+		rbVector = new JRadioButton("Vector");
 		radioButtonsGroup.add(rbVector);
 		rbVector.setBackground(new Color(175, 238, 238));
 		rbVector.setFont(new Font("Tahoma", Font.ITALIC, 16));
 		rbVector.setBounds(20, 52, 127, 25);
 		panel_1.add(rbVector);
 		
-		JRadioButton rbArrayList = new JRadioButton("ArrayList");
+		rbArrayList = new JRadioButton("ArrayList");
 		radioButtonsGroup.add(rbArrayList);
 		rbArrayList.setBackground(new Color(175, 238, 238));
 		rbArrayList.setFont(new Font("Tahoma", Font.ITALIC, 16));
 		rbArrayList.setBounds(20, 82, 127, 25);
 		panel_1.add(rbArrayList);
 		
-		JRadioButton rbLinkedList = new JRadioButton("LinkedList");
+		rbLinkedList = new JRadioButton("LinkedList");
 		radioButtonsGroup.add(rbLinkedList);
 		rbLinkedList.setBackground(new Color(175, 238, 238));
 		rbLinkedList.setFont(new Font("Tahoma", Font.ITALIC, 16));
 		rbLinkedList.setBounds(20, 111, 127, 25);
 		panel_1.add(rbLinkedList);
 		
-		JRadioButton rbHashMap = new JRadioButton("HashMap");
+		rbHashMap = new JRadioButton("HashMap");
 		radioButtonsGroup.add(rbHashMap);
 		rbHashMap.setBackground(new Color(175, 238, 238));
 		rbHashMap.setFont(new Font("Tahoma", Font.ITALIC, 16));
 		rbHashMap.setBounds(20, 141, 127, 25);
 		panel_1.add(rbHashMap);
 		
-		JRadioButton rbTreeMap = new JRadioButton("TreeMap");
+		rbTreeMap = new JRadioButton("TreeMap");
 		radioButtonsGroup.add(rbTreeMap);
 		rbTreeMap.setBackground(new Color(175, 238, 238));
 		rbTreeMap.setFont(new Font("Tahoma", Font.ITALIC, 16));
@@ -252,5 +264,30 @@ public class opJavaTask1 {
 		
 		JList listDeleteAndShow = new JList();
 		scrollPane_3.setViewportView(listDeleteAndShow);
+	}
+
+	private void createCollection() {
+		
+		if (rbVector.isSelected()) {
+			if(vector == null) {
+				vector = new Vector<>();
+			}
+		} else if (rbArrayList.isSelected()) {
+			if(arrayList == null) {
+				arrayList = new ArrayList<>();
+			}
+		} else if (rbLinkedList.isSelected()) {
+			if(linkedList == null) {
+				linkedList = new LinkedList<>();
+			}
+		} else if (rbHashMap.isSelected()) {
+			if(hashMap == null) {
+				hashMap = new HashMap<>();
+			}
+		} else if (rbTreeMap.isSelected()) {
+			if(treeMap == null) {
+				treeMap = new TreeMap<>();
+			}
+		}
 	}
 }
