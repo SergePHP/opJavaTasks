@@ -51,6 +51,7 @@ public class opJavaTask1 {
 	private JList listItemsTypes;
 	private JList listItemsFound;
 	private DefaultListModel listModelItemsFound;
+	private DefaultListModel listModelCollectionContent;
 
 	/**
 	 * Launch the application.
@@ -223,7 +224,7 @@ public class opJavaTask1 {
 		panel_4.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Тип добавляемого элемента:");
-		lblNewLabel.setBounds(12, 5, 215, 20);
+		lblNewLabel.setBounds(12, 5, 350, 20);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_4.add(lblNewLabel);
 		
@@ -262,7 +263,8 @@ public class opJavaTask1 {
 		scrollPane_2.setBounds(479, 85, 231, 141);
 		panel_4.add(scrollPane_2);
 		
-		JList listCollectionContent = new JList();
+		listModelCollectionContent = new DefaultListModel();
+		JList listCollectionContent = new JList(listModelCollectionContent);
 		scrollPane_2.setViewportView(listCollectionContent);
 		
 		JPanel panel_5 = new JPanel();
@@ -273,7 +275,7 @@ public class opJavaTask1 {
 		
 		JLabel label_3 = new JLabel("Индекс удаляемого элемента:");
 		label_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label_3.setBounds(12, 13, 237, 20);
+		label_3.setBounds(12, 13, 350, 20);
 		panel_5.add(label_3);
 		
 		indexField = new JTextField();
@@ -294,99 +296,49 @@ public class opJavaTask1 {
 		scrollPane_3.setViewportView(listDeleteAndShow);
 	}
 	
-	private <T> void printCollectionToTextArea(Collection<T> c, JRadioButton rb) {
-		textAreaCollectionInfo.setText("Коллекция \"" + rb.getText() + "\"\n{\n");
-		
-		for (Object item : c) {
-			textAreaCollectionInfo.append(item.toString() + ", (" + item.getClass().getName() + ")\n");
-		}
-		textAreaCollectionInfo.append("}\n");
-	}
-	private <K, V> void printMapToTextArea(Map<K, V> m, JRadioButton rb) {
-		
-		textAreaCollectionInfo.setText("Коллекция \"" + rb.getText() + "\"\n{\n");
-		
-		for (Map.Entry<K, V> entry : m.entrySet()) {
-			textAreaCollectionInfo.append(entry.getKey() + " : " + entry.getValue() + 
-					", (" + entry.getKey().getClass().getName() + " : " + entry.getValue().getClass().getName() + ")\n");
-		}
-		textAreaCollectionInfo.append("}\n");
-	}
-
-	private void printCollectionToList(ArrayList<String> s, DefaultListModel listModel) {
-		
-		listModel.clear();
-		
-		for (String string : s) {
-			listModel.addElement(string);
-		}
-	}
-	private void printNoCollectionMessageToList(DefaultListModel listModel) {
-		
-		listModel.clear();
-		listModel.addElement("Коллекция не найдена");
-	}
-	private <T> ArrayList<String> findItemsInList(String type, Collection<T> c) {
-		
-		ArrayList<String> items = new ArrayList<>();
-		
-		for (T t : c) {
-			if(t.getClass().getSimpleName().equals(type)) {
-				items.add(t.toString());
-			}
-		}
-		if(items.size() == 0) {
-			items.add("Элементы не найдены");
-		}
-		return items;
-	}
-	private <K, V> ArrayList<String> findItemsInMap(String type, Map<K, V> m) {
-		
-		ArrayList<String> items = new ArrayList<>();
-		
-		for (Map.Entry<K, V> entry : m.entrySet()) {
-			if (entry.getValue().getClass().getSimpleName().equals(type)) {
-				items.add(entry.getKey() + " : " + entry.getValue());
-			}
-		}	
-		if(items.size() == 0) {
-			items.add("Элементы не найдены");
-		}
-		return items;
-	}
 	private void findItemsInCollections() {
 
-		String selVal = listItemsTypes.getSelectedValue().toString();
+		String selectedValue = listItemsTypes.getSelectedValue().toString();
 		
 		if (rbVector.isSelected()) {
+			
 			if(vector != null) {
-				printCollectionToList(findItemsInList(selVal, vector), listModelItemsFound);
+				ColJob.printCollection(ColJob.findItems(selectedValue, vector),
+						listModelItemsFound);
 			} else {
-				printNoCollectionMessageToList(listModelItemsFound);
+				ColJob.printNoCollectionMessage(listModelItemsFound);
 			}
 		} else if (rbArrayList.isSelected()) {
+			
 			if(arrayList != null) {
-				printCollectionToList(findItemsInList(selVal, arrayList), listModelItemsFound);
+				ColJob.printCollection(ColJob.findItems(selectedValue, arrayList),
+						listModelItemsFound);
 			} else {
-				printNoCollectionMessageToList(listModelItemsFound);
+				ColJob.printNoCollectionMessage(listModelItemsFound);
 			}
 		} else if (rbLinkedList.isSelected()) {
+			
 			if(linkedList != null) {
-				printCollectionToList(findItemsInList(selVal, linkedList), listModelItemsFound);
+				ColJob.printCollection(ColJob.findItems(selectedValue, linkedList),
+						listModelItemsFound);
 			} else {
-				printNoCollectionMessageToList(listModelItemsFound);
+				ColJob.printNoCollectionMessage(listModelItemsFound);
 			}
 		} else if (rbHashMap.isSelected()) {
+			
 			if(hashMap != null) {
-				printCollectionToList(findItemsInMap(selVal, hashMap), listModelItemsFound);
+				ColJob.printCollection(ColJob.findItems(selectedValue, hashMap),
+						listModelItemsFound);
 			} else {
-				printNoCollectionMessageToList(listModelItemsFound);
+				ColJob.printNoCollectionMessage(listModelItemsFound);
 			}
 		} else if (rbTreeMap.isSelected()) {
+			
 			if(treeMap != null) {
-				printCollectionToList(findItemsInMap(selVal, treeMap), listModelItemsFound);
+				ColJob.printCollection(ColJob.findItems(selectedValue, treeMap),
+						listModelItemsFound);
 			} else {
-				printNoCollectionMessageToList(listModelItemsFound);
+				ColJob.printNoCollectionMessage(listModelItemsFound);
 			}
 		}
 	}
@@ -396,60 +348,243 @@ public class opJavaTask1 {
 			if(vector == null) {
 				vector = new Vector();
 			}
-			printCollectionToTextArea(vector, rbVector);
+			ColJob.printCollection(ColJob.findAllItems(vector, rbVector),
+					textAreaCollectionInfo);
+
 		} else if (rbArrayList.isSelected()) {
 			if(arrayList == null) {
 				arrayList = new ArrayList();
 			}
-			printCollectionToTextArea(arrayList, rbArrayList);
+			ColJob.printCollection(ColJob.findAllItems(arrayList, rbArrayList),
+					textAreaCollectionInfo);
+			
 		} else if (rbLinkedList.isSelected()) {
 			if(linkedList == null) {
 				linkedList = new LinkedList();
 			}
-			printCollectionToTextArea(linkedList, rbLinkedList);
+			ColJob.printCollection(ColJob.findAllItems(linkedList, rbLinkedList),
+					textAreaCollectionInfo);
+			
 		} else if (rbHashMap.isSelected()) {
 			if(hashMap == null) {
 				hashMap = new HashMap();
 			}
-			printMapToTextArea(hashMap, rbHashMap);
+			ColJob.printCollection(ColJob.findAllItems(hashMap, rbHashMap),
+					textAreaCollectionInfo);
+			
 		} else if (rbTreeMap.isSelected()) {
 			if(treeMap == null) {
 				treeMap = new TreeMap();
 			}
-			printMapToTextArea(treeMap, rbTreeMap);
+			ColJob.printCollection(ColJob.findAllItems(treeMap, rbTreeMap),
+					textAreaCollectionInfo);
 		}
 	}
 	private void clearCollection() {
 		
 		if (rbVector.isSelected()) {
+			
 			if(vector != null) {
 				vector.clear();
+				ColJob.printCollection(ColJob.findAllItems(vector, rbVector),
+						textAreaCollectionInfo);
+			} else {
+				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
 			}
-			printCollectionToTextArea(vector, rbVector);
 		} else if (rbArrayList.isSelected()) {
+			
 			if(arrayList != null) {
 				arrayList.clear();
+				ColJob.printCollection(ColJob.findAllItems(arrayList, rbArrayList),
+						textAreaCollectionInfo);
+			} else {
+				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
 			}
-			printCollectionToTextArea(arrayList, rbArrayList);
+
 		} else if (rbLinkedList.isSelected()) {
+			
 			if(linkedList != null) {
 				linkedList.clear();
+				ColJob.printCollection(ColJob.findAllItems(linkedList, rbLinkedList),
+						textAreaCollectionInfo);
+			} else {
+				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
 			}
-			printCollectionToTextArea(linkedList, rbLinkedList);
 		} else if (rbHashMap.isSelected()) {
+			
 			if(hashMap != null) {
 				hashMap.clear();
+				ColJob.printCollection(ColJob.findAllItems(hashMap, rbHashMap),
+						textAreaCollectionInfo);
+			} else {
+				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
 			}
-			printMapToTextArea(hashMap, rbHashMap);
 		} else if (rbTreeMap.isSelected()) {
+			
 			if(treeMap != null) {
 				treeMap.clear();
+				ColJob.printCollection(ColJob.findAllItems(treeMap, rbTreeMap),
+						textAreaCollectionInfo);
+			} else {
+				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
 			}
-			printMapToTextArea(treeMap, rbTreeMap);
 		}
 	}
 
 	private void printCollection() {
 		
+		if (rbVector.isSelected()) {
+			
+			if(vector != null) {
+				ColJob.printCollection(ColJob.findAllItems(vector),
+						listModelCollectionContent);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		} else if (rbArrayList.isSelected()) {
+			
+			if(arrayList != null) {
+				ColJob.printCollection(ColJob.findAllItems(arrayList),
+						listModelCollectionContent);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+
+		} else if (rbLinkedList.isSelected()) {
+			
+			if(linkedList != null) {
+				ColJob.printCollection(ColJob.findAllItems(linkedList),
+						listModelCollectionContent);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		} else if (rbHashMap.isSelected()) {
+			
+			if(hashMap != null) {
+				ColJob.printCollection(ColJob.findAllItems(hashMap),
+						listModelCollectionContent);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		} else if (rbTreeMap.isSelected()) {
+			
+			if(treeMap != null) {
+				ColJob.printCollection(ColJob.findAllItems(treeMap),
+						listModelCollectionContent);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		}
+	}
+	
+	private static class ColJob {
+		
+		private static <T> List<String> findItems(String type, Collection<T> collection) {
+			
+			List<String> itemsToPrint = new ArrayList<>();
+			
+			for (T item : collection) {
+				if(item.getClass().getSimpleName().equals(type)) {
+					itemsToPrint.add(item.toString());
+				}
+			}
+			if(itemsToPrint.size() == 0) {
+				itemsToPrint.add("Элементы не найдены");
+			}
+			return itemsToPrint;
+		}
+		private static <K, V> List<String> findItems(String type, Map<K, V> map) {
+			
+			List<String> itemsToPrint = new ArrayList<>();
+			
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+				if (entry.getValue().getClass().getSimpleName().equals(type)) {
+					itemsToPrint.add(entry.getKey() + " : " + entry.getValue());
+				}
+			}	
+			if(itemsToPrint.size() == 0) {
+				itemsToPrint.add("Элементы не найдены");
+			}
+			return itemsToPrint;
+		}
+		private static <T> List<String> findAllItems(Collection<T> collection) {
+			
+			List<String> itemsToPrint = new ArrayList<>();
+			
+			for (T item : collection) {
+					itemsToPrint.add(item.toString());
+			}
+			if(itemsToPrint.size() == 0) {
+				itemsToPrint.add("Пустая коллекция");
+			}
+			return itemsToPrint;
+		}
+		private static <K, V> List<String> findAllItems(Map<K, V> map) {
+			
+			List<String> itemsToPrint = new ArrayList<>();
+			
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+					itemsToPrint.add(entry.getKey() + " : " + entry.getValue());
+			}	
+			if(itemsToPrint.size() == 0) {
+				itemsToPrint.add("Пустая коллекция");
+			}
+			return itemsToPrint;
+		}
+		private static <T> List<String> findAllItems(Collection<T> collection, JRadioButton rb) {
+			
+			List<String> itemsToPrint = new ArrayList<>();
+			
+			itemsToPrint.add("Коллекция \"" + rb.getText() + "\"\n{");
+			
+			for (T item : collection) {
+				itemsToPrint.add(item.toString() + ", (" + item.getClass().getName() + ")");
+			}
+			itemsToPrint.add("}");
+			
+			return itemsToPrint;
+		}
+		private static <K, V> List<String> findAllItems(Map<K, V> m, JRadioButton rb) {
+			
+			List<String> itemsToPrint = new ArrayList<>();
+			
+			itemsToPrint.add("Коллекция \"" + rb.getText() + "\"\n{");
+			
+			for (Map.Entry<K, V> entry : m.entrySet()) {
+				itemsToPrint.add(entry.getKey() + " : " + entry.getValue() + 
+						", (" + entry.getKey().getClass().getName() + " : " + entry.getValue().getClass().getName() + ")");
+			}
+			itemsToPrint.add("}");
+			
+			return itemsToPrint;
+		}
+		private static void printCollection(List<String> printData, DefaultListModel listModel) {
+			
+			listModel.clear();
+			
+			for (String string : printData) {
+				listModel.addElement(string);
+			}
+		}
+		private static void printCollection(List<String> printData, JTextArea textArea) {
+			
+			textArea.setText("");
+			
+			for (String string : printData) {
+				textArea.append(string + "\n");
+			}
+		}
+		private static void printNoCollectionMessage(DefaultListModel listModel) {
+			
+			listModel.clear();
+			listModel.addElement("Коллекция не найдена");
+			
+		}
+		private static void printNoCollectionMessage(JTextArea textArea) {
+			
+			textArea.setText("Коллекция не найдена");
+			
+		}
+
 	}
 }
