@@ -23,6 +23,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -34,11 +36,11 @@ public class opJavaTask1 {
 	private JTextField indexField;
 	private final ButtonGroup radioButtonsGroup = new ButtonGroup();
 	
-	private List<Object> vector;
-	private List<Object> arrayList;
-	private List<Object> linkedList;
-	private Map<Object, Object> hashMap;
-	private Map<Object, Object> treeMap;
+	private List vector;
+	private List arrayList;
+	private List linkedList;
+	private Map hashMap;
+	private Map treeMap;
 	
 	private JRadioButton rbVector;
 	private JRadioButton rbArrayList;
@@ -101,6 +103,11 @@ public class opJavaTask1 {
 		panel.add(btnCreateCollection);
 		
 		JButton btnClearCollection = new JButton("Очистить коллекцию");
+		btnClearCollection.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clearCollection();
+			}
+		});
 		btnClearCollection.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnClearCollection.setBounds(30, 48, 382, 30);
 		panel.add(btnClearCollection);
@@ -125,6 +132,7 @@ public class opJavaTask1 {
 		panel_1.add(label);
 		
 		rbVector = new JRadioButton("Vector");
+		rbVector.setSelected(true);
 		radioButtonsGroup.add(rbVector);
 		rbVector.setBackground(new Color(175, 238, 238));
 		rbVector.setFont(new Font("Tahoma", Font.ITALIC, 16));
@@ -182,6 +190,7 @@ public class opJavaTask1 {
 				return types[index];
 			}
 		});
+		listItemsTypes.setSelectedIndex(0);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(253, 245, 230));
@@ -190,12 +199,17 @@ public class opJavaTask1 {
 		panel_3.setLayout(null);
 		
 		JButton btnFindItems = new JButton("Вывести найденые элементы в виде списка");
+		btnFindItems.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				findItemsInCollections();
+			}
+		});
 		btnFindItems.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnFindItems.setBounds(12, 13, 349, 30);
+		btnFindItems.setBounds(0, 13, 374, 30);
 		panel_3.add(btnFindItems);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(87, 56, 184, 105);
+		scrollPane_1.setBounds(64, 56, 228, 105);
 		panel_3.add(scrollPane_1);
 		
 		listModelItemsFound = new DefaultListModel();
@@ -235,12 +249,17 @@ public class opJavaTask1 {
 		panel_4.add(btnAddItem);
 		
 		JButton btnShowCollection = new JButton("Отобразить коллекцию");
+		btnShowCollection.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				printCollection();
+			}
+		});
 		btnShowCollection.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnShowCollection.setBounds(433, 52, 303, 30);
 		panel_4.add(btnShowCollection);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(502, 85, 182, 141);
+		scrollPane_2.setBounds(479, 85, 231, 141);
 		panel_4.add(scrollPane_2);
 		
 		JList listCollectionContent = new JList();
@@ -268,69 +287,169 @@ public class opJavaTask1 {
 		panel_5.add(btnDeleteItem);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(506, 51, 180, 139);
+		scrollPane_3.setBounds(479, 51, 229, 139);
 		panel_5.add(scrollPane_3);
 		
 		JList listDeleteAndShow = new JList();
 		scrollPane_3.setViewportView(listDeleteAndShow);
 	}
+	
+	private <T> void printCollectionToTextArea(Collection<T> c, JRadioButton rb) {
+		textAreaCollectionInfo.setText("Коллекция \"" + rb.getText() + "\"\n{\n");
+		
+		for (Object item : c) {
+			textAreaCollectionInfo.append(item.toString() + ", (" + item.getClass().getName() + ")\n");
+		}
+		textAreaCollectionInfo.append("}\n");
+	}
+	private <K, V> void printMapToTextArea(Map<K, V> m, JRadioButton rb) {
+		
+		textAreaCollectionInfo.setText("Коллекция \"" + rb.getText() + "\"\n{\n");
+		
+		for (Map.Entry<K, V> entry : m.entrySet()) {
+			textAreaCollectionInfo.append(entry.getKey() + " : " + entry.getValue() + 
+					", (" + entry.getKey().getClass().getName() + " : " + entry.getValue().getClass().getName() + ")\n");
+		}
+		textAreaCollectionInfo.append("}\n");
+	}
 
+	private void printCollectionToList(ArrayList<String> s, DefaultListModel listModel) {
+		
+		listModel.clear();
+		
+		for (String string : s) {
+			listModel.addElement(string);
+		}
+	}
+	private void printNoCollectionMessageToList(DefaultListModel listModel) {
+		
+		listModel.clear();
+		listModel.addElement("Коллекция не найдена");
+	}
+	private <T> ArrayList<String> findItemsInList(String type, Collection<T> c) {
+		
+		ArrayList<String> items = new ArrayList<>();
+		
+		for (T t : c) {
+			if(t.getClass().getSimpleName().equals(type)) {
+				items.add(t.toString());
+			}
+		}
+		if(items.size() == 0) {
+			items.add("Элементы не найдены");
+		}
+		return items;
+	}
+	private <K, V> ArrayList<String> findItemsInMap(String type, Map<K, V> m) {
+		
+		ArrayList<String> items = new ArrayList<>();
+		
+		for (Map.Entry<K, V> entry : m.entrySet()) {
+			if (entry.getValue().getClass().getSimpleName().equals(type)) {
+				items.add(entry.getKey() + " : " + entry.getValue());
+			}
+		}	
+		if(items.size() == 0) {
+			items.add("Элементы не найдены");
+		}
+		return items;
+	}
+	private void findItemsInCollections() {
+
+		String selVal = listItemsTypes.getSelectedValue().toString();
+		
+		if (rbVector.isSelected()) {
+			if(vector != null) {
+				printCollectionToList(findItemsInList(selVal, vector), listModelItemsFound);
+			} else {
+				printNoCollectionMessageToList(listModelItemsFound);
+			}
+		} else if (rbArrayList.isSelected()) {
+			if(arrayList != null) {
+				printCollectionToList(findItemsInList(selVal, arrayList), listModelItemsFound);
+			} else {
+				printNoCollectionMessageToList(listModelItemsFound);
+			}
+		} else if (rbLinkedList.isSelected()) {
+			if(linkedList != null) {
+				printCollectionToList(findItemsInList(selVal, linkedList), listModelItemsFound);
+			} else {
+				printNoCollectionMessageToList(listModelItemsFound);
+			}
+		} else if (rbHashMap.isSelected()) {
+			if(hashMap != null) {
+				printCollectionToList(findItemsInMap(selVal, hashMap), listModelItemsFound);
+			} else {
+				printNoCollectionMessageToList(listModelItemsFound);
+			}
+		} else if (rbTreeMap.isSelected()) {
+			if(treeMap != null) {
+				printCollectionToList(findItemsInMap(selVal, treeMap), listModelItemsFound);
+			} else {
+				printNoCollectionMessageToList(listModelItemsFound);
+			}
+		}
+	}
 	private void createCollection() {
 		
 		if (rbVector.isSelected()) {
 			if(vector == null) {
-				vector = new Vector<>();
+				vector = new Vector();
 			}
-			textAreaCollectionInfo.append("Vector created: empty" + vector.toString() + "\n");
+			printCollectionToTextArea(vector, rbVector);
 		} else if (rbArrayList.isSelected()) {
 			if(arrayList == null) {
-				arrayList = new ArrayList<>();
+				arrayList = new ArrayList();
 			}
-			printCollectionData(arrayList, textAreaCollectionInfo);
+			printCollectionToTextArea(arrayList, rbArrayList);
 		} else if (rbLinkedList.isSelected()) {
 			if(linkedList == null) {
-				linkedList = new LinkedList<>();
+				linkedList = new LinkedList();
 			}
-			printCollectionData(linkedList, textAreaCollectionInfo);
+			printCollectionToTextArea(linkedList, rbLinkedList);
 		} else if (rbHashMap.isSelected()) {
 			if(hashMap == null) {
-				hashMap = new HashMap<>();
-				textAreaCollectionInfo.append(hashMap.toString());
+				hashMap = new HashMap();
 			}
+			printMapToTextArea(hashMap, rbHashMap);
 		} else if (rbTreeMap.isSelected()) {
 			if(treeMap == null) {
-				treeMap = new TreeMap<>();
+				treeMap = new TreeMap();
 			}
+			printMapToTextArea(treeMap, rbTreeMap);
 		}
+	}
+	private void clearCollection() {
+		
+		if (rbVector.isSelected()) {
+			if(vector != null) {
+				vector.clear();
+			}
+			printCollectionToTextArea(vector, rbVector);
+		} else if (rbArrayList.isSelected()) {
+			if(arrayList != null) {
+				arrayList.clear();
+			}
+			printCollectionToTextArea(arrayList, rbArrayList);
+		} else if (rbLinkedList.isSelected()) {
+			if(linkedList != null) {
+				linkedList.clear();
+			}
+			printCollectionToTextArea(linkedList, rbLinkedList);
+		} else if (rbHashMap.isSelected()) {
+			if(hashMap != null) {
+				hashMap.clear();
+			}
+			printMapToTextArea(hashMap, rbHashMap);
+		} else if (rbTreeMap.isSelected()) {
+			if(treeMap != null) {
+				treeMap.clear();
+			}
+			printMapToTextArea(treeMap, rbTreeMap);
+		}
+	}
+
+	private void printCollection() {
 		
 	}
-	
-	
-	
-	
-	private <K, V> void printMapData(Map<K, V> c, Object o) {
-
-		for (Map.Entry<K, V> entry : c.entrySet()) {
-			
-			outputData(entry.getKey() + " : " + entry.getValue() + "\n", o);
-		}
-	}
-	private <T> void printCollectionData(Collection<T> t, Object o){
-
-		for (T item : t) {
-			outputData(item.toString() + "\n", o);
-		}
-	}
-	private void outputData(String s, Object o) {
-		if (o.getClass().getName().
-				equals(new JTextArea().getClass().getName())) {
-			JTextArea textArea = (JTextArea) o;
-			textArea.append(s);
-		} else if (o.getClass().getName().
-				equals(new DefaultListModel().getClass().getName())) {
-			DefaultListModel listModel = (DefaultListModel) o;
-			listModel.addElement(s);
-		}
-	}
-
 }
