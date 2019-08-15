@@ -55,6 +55,9 @@ public class opJavaTask1 {
 	private DefaultListModel listModelCollectionContent;
 	private JComboBox typeOfItemsCombo;
 	private DefaultListModel listModelDeleteAndShow;
+	
+	private Queue<Integer> hmDelIndexes = new PriorityQueue<>();
+	private Queue<Integer> tmDelIndexes = new PriorityQueue<>();
 
 	/**
 	 * Launch the application.
@@ -530,14 +533,23 @@ public class opJavaTask1 {
 		} else if (rbHashMap.isSelected()) {
 			
 			if(hashMap != null) {
-				hashMap.put(hashMap.size(), value);
+				if(hmDelIndexes.peek() != null) {
+					hashMap.put(hmDelIndexes.poll(), value);
+				} else {
+					hashMap.put(hashMap.size(), value);
+				}
 			} else {
 				ColJob.printNoCollectionMessage(listModelCollectionContent);
 			}
 		} else if (rbTreeMap.isSelected()) {
 			
 			if(treeMap != null) {
-				treeMap.put(treeMap.size(), value);
+				if (tmDelIndexes.peek() != null) {
+					treeMap.put(tmDelIndexes.poll(), value);
+				} else {
+					treeMap.put(treeMap.size(), value);
+				}
+
 			} else {
 				ColJob.printNoCollectionMessage(listModelCollectionContent);
 			}
@@ -580,7 +592,12 @@ public class opJavaTask1 {
 			} else if (rbHashMap.isSelected()) {
 				
 				if(hashMap != null) {
-					hashMap.remove((Integer)index);
+					
+					if(hashMap.remove((Integer)index) == null) {
+						throw new IndexOutOfBoundsException("Array index out of range.");
+					}
+					
+					hmDelIndexes.add(index);						
 					ColJob.printCollection(ColJob.findAllItems(hashMap),
 							listModelDeleteAndShow);
 				} else {
@@ -589,7 +606,12 @@ public class opJavaTask1 {
 			} else if (rbTreeMap.isSelected()) {
 				
 				if(treeMap != null) {
-					treeMap.remove((Integer)index);
+					
+					if(treeMap.remove((Integer)index) == null) {
+						throw new IndexOutOfBoundsException("Array index out of range.");
+					}
+					
+					tmDelIndexes.add(index);
 					ColJob.printCollection(ColJob.findAllItems(treeMap),
 							listModelDeleteAndShow);
 				} else {
