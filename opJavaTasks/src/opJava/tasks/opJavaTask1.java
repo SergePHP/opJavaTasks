@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JRadioButton;
 import java.awt.Color;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -52,6 +53,8 @@ public class opJavaTask1 {
 	private JList listItemsFound;
 	private DefaultListModel listModelItemsFound;
 	private DefaultListModel listModelCollectionContent;
+	private JComboBox typeOfItemsCombo;
+	private DefaultListModel listModelDeleteAndShow;
 
 	/**
 	 * Launch the application.
@@ -83,7 +86,7 @@ public class opJavaTask1 {
 	
 		frame = new JFrame();
 		frame.setTitle("Коллекции");
-		frame.setBounds(100, 100, 829, 1025);
+		frame.setBounds(100, 100, 860, 1025);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -123,7 +126,7 @@ public class opJavaTask1 {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(175, 238, 238));
-		panel_1.setBounds(469, 13, 332, 303);
+		panel_1.setBounds(469, 13, 361, 303);
 		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -133,39 +136,44 @@ public class opJavaTask1 {
 		panel_1.add(label);
 		
 		rbVector = new JRadioButton("Vector");
+		rbVector.setForeground(new Color(0, 0, 255));
 		rbVector.setSelected(true);
 		radioButtonsGroup.add(rbVector);
 		rbVector.setBackground(new Color(175, 238, 238));
-		rbVector.setFont(new Font("Tahoma", Font.ITALIC, 16));
-		rbVector.setBounds(20, 52, 127, 25);
+		rbVector.setFont(new Font("Arial", Font.ITALIC, 17));
+		rbVector.setBounds(34, 55, 127, 25);
 		panel_1.add(rbVector);
 		
 		rbArrayList = new JRadioButton("ArrayList");
+		rbArrayList.setForeground(new Color(0, 0, 255));
 		radioButtonsGroup.add(rbArrayList);
 		rbArrayList.setBackground(new Color(175, 238, 238));
-		rbArrayList.setFont(new Font("Tahoma", Font.ITALIC, 16));
-		rbArrayList.setBounds(20, 82, 127, 25);
+		rbArrayList.setFont(new Font("Arial", Font.ITALIC, 17));
+		rbArrayList.setBounds(34, 85, 127, 25);
 		panel_1.add(rbArrayList);
 		
 		rbLinkedList = new JRadioButton("LinkedList");
+		rbLinkedList.setForeground(new Color(0, 0, 255));
 		radioButtonsGroup.add(rbLinkedList);
 		rbLinkedList.setBackground(new Color(175, 238, 238));
-		rbLinkedList.setFont(new Font("Tahoma", Font.ITALIC, 16));
-		rbLinkedList.setBounds(20, 111, 127, 25);
+		rbLinkedList.setFont(new Font("Arial", Font.ITALIC, 17));
+		rbLinkedList.setBounds(34, 114, 127, 25);
 		panel_1.add(rbLinkedList);
 		
 		rbHashMap = new JRadioButton("HashMap");
+		rbHashMap.setForeground(new Color(0, 0, 255));
 		radioButtonsGroup.add(rbHashMap);
 		rbHashMap.setBackground(new Color(175, 238, 238));
-		rbHashMap.setFont(new Font("Tahoma", Font.ITALIC, 16));
-		rbHashMap.setBounds(20, 141, 127, 25);
+		rbHashMap.setFont(new Font("Arial", Font.ITALIC, 17));
+		rbHashMap.setBounds(34, 144, 127, 25);
 		panel_1.add(rbHashMap);
 		
 		rbTreeMap = new JRadioButton("TreeMap");
+		rbTreeMap.setForeground(new Color(0, 0, 255));
 		radioButtonsGroup.add(rbTreeMap);
 		rbTreeMap.setBackground(new Color(175, 238, 238));
-		rbTreeMap.setFont(new Font("Tahoma", Font.ITALIC, 16));
-		rbTreeMap.setBounds(20, 171, 127, 25);
+		rbTreeMap.setFont(new Font("Arial", Font.ITALIC, 17));
+		rbTreeMap.setBounds(34, 174, 127, 25);
 		panel_1.add(rbTreeMap);
 		
 		JPanel panel_2 = new JPanel();
@@ -195,7 +203,7 @@ public class opJavaTask1 {
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(253, 245, 230));
-		panel_3.setBounds(427, 329, 374, 174);
+		panel_3.setBounds(427, 329, 403, 174);
 		frame.getContentPane().add(panel_3);
 		panel_3.setLayout(null);
 		
@@ -206,11 +214,11 @@ public class opJavaTask1 {
 			}
 		});
 		btnFindItems.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnFindItems.setBounds(0, 13, 374, 30);
+		btnFindItems.setBounds(12, 13, 374, 30);
 		panel_3.add(btnFindItems);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(64, 56, 228, 105);
+		scrollPane_1.setBounds(62, 56, 280, 105);
 		panel_3.add(scrollPane_1);
 		
 		listModelItemsFound = new DefaultListModel();
@@ -219,7 +227,7 @@ public class opJavaTask1 {
 		
 		JPanel panel_4 = new JPanel();
 		panel_4.setBackground(new Color(255, 228, 225));
-		panel_4.setBounds(12, 516, 789, 239);
+		panel_4.setBounds(12, 516, 818, 239);
 		frame.getContentPane().add(panel_4);
 		panel_4.setLayout(null);
 		
@@ -228,7 +236,7 @@ public class opJavaTask1 {
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_4.add(lblNewLabel);
 		
-		JComboBox typeOfItemsCombo = new JComboBox();
+		typeOfItemsCombo = new JComboBox();
 		typeOfItemsCombo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		typeOfItemsCombo.setModel(new DefaultComboBoxModel(types));
 		typeOfItemsCombo.setBounds(12, 38, 279, 25);
@@ -245,8 +253,13 @@ public class opJavaTask1 {
 		panel_4.add(label_2);
 		
 		JButton btnAddItem = new JButton("Добавить элемент коллекции");
+		btnAddItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addItemsToCollection();
+			}
+		});
 		btnAddItem.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnAddItem.setBounds(433, 13, 303, 30);
+		btnAddItem.setBounds(468, 13, 303, 30);
 		panel_4.add(btnAddItem);
 		
 		JButton btnShowCollection = new JButton("Отобразить коллекцию");
@@ -256,11 +269,11 @@ public class opJavaTask1 {
 			}
 		});
 		btnShowCollection.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnShowCollection.setBounds(433, 52, 303, 30);
+		btnShowCollection.setBounds(468, 52, 303, 30);
 		panel_4.add(btnShowCollection);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(479, 85, 231, 141);
+		scrollPane_2.setBounds(478, 85, 279, 141);
 		panel_4.add(scrollPane_2);
 		
 		listModelCollectionContent = new DefaultListModel();
@@ -269,7 +282,7 @@ public class opJavaTask1 {
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBackground(new Color(221, 160, 221));
-		panel_5.setBounds(12, 768, 789, 200);
+		panel_5.setBounds(12, 768, 818, 200);
 		frame.getContentPane().add(panel_5);
 		panel_5.setLayout(null);
 		
@@ -284,15 +297,21 @@ public class opJavaTask1 {
 		panel_5.add(indexField);
 		
 		JButton btnDeleteItem = new JButton("Удалить элемент и отобразить коллекцию");
+		btnDeleteItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteAndShow();
+			}
+		});
 		btnDeleteItem.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnDeleteItem.setBounds(417, 13, 360, 30);
+		btnDeleteItem.setBounds(446, 13, 360, 30);
 		panel_5.add(btnDeleteItem);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(479, 51, 229, 139);
+		scrollPane_3.setBounds(479, 51, 279, 139);
 		panel_5.add(scrollPane_3);
 		
-		JList listDeleteAndShow = new JList();
+		listModelDeleteAndShow = new DefaultListModel();
+		JList listDeleteAndShow = new JList(listModelDeleteAndShow);
 		scrollPane_3.setViewportView(listDeleteAndShow);
 	}
 	
@@ -476,7 +495,155 @@ public class opJavaTask1 {
 			}
 		}
 	}
+
+	private void addItemsToCollection() {
+		
+		listModelCollectionContent.clear();
+
+		Object value = parseValue();
+		
+		if (value == null) {
+			return;
+		}
+
+		if (rbVector.isSelected()) {
+			
+			if(vector != null) {
+				vector.add(value);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		} else if (rbArrayList.isSelected()) {
+			
+			if(arrayList != null) {
+				arrayList.add(value);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		} else if (rbLinkedList.isSelected()) {
+			
+			if(linkedList != null) {
+				linkedList.add(value);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		} else if (rbHashMap.isSelected()) {
+			
+			if(hashMap != null) {
+				hashMap.put(hashMap.size(), value);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		} else if (rbTreeMap.isSelected()) {
+			
+			if(treeMap != null) {
+				treeMap.put(treeMap.size(), value);
+			} else {
+				ColJob.printNoCollectionMessage(listModelCollectionContent);
+			}
+		}
+	}
 	
+	private void deleteAndShow() {
+	
+		try {
+			
+			int index = Integer.valueOf(indexField.getText());
+			
+			if (rbVector.isSelected()) {
+				
+				if(vector != null) {
+					vector.remove(index);
+					ColJob.printCollection(ColJob.findAllItems(vector),
+							listModelDeleteAndShow);
+				} else {
+					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
+				}
+			} else if (rbArrayList.isSelected()) {
+				
+				if(arrayList != null) {
+					arrayList.remove(index);
+					ColJob.printCollection(ColJob.findAllItems(arrayList),
+							listModelDeleteAndShow);
+				} else {
+					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
+				}
+			} else if (rbLinkedList.isSelected()) {
+				
+				if(linkedList != null) {
+					linkedList.remove(index);
+					ColJob.printCollection(ColJob.findAllItems(linkedList),
+							listModelDeleteAndShow);
+				} else {
+					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
+				}
+			} else if (rbHashMap.isSelected()) {
+				
+				if(hashMap != null) {
+					hashMap.remove((Integer)index);
+					ColJob.printCollection(ColJob.findAllItems(hashMap),
+							listModelDeleteAndShow);
+				} else {
+					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
+				}
+			} else if (rbTreeMap.isSelected()) {
+				
+				if(treeMap != null) {
+					treeMap.remove((Integer)index);
+					ColJob.printCollection(ColJob.findAllItems(treeMap),
+							listModelDeleteAndShow);
+				} else {
+					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
+				}
+			}
+			
+		} catch (Exception e) {
+			
+			JOptionPane.showMessageDialog(null, "Ошибка выполнения операции\n" + e.getMessage(), 
+					"Ошибка", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private Object parseValue() {
+		
+		try {
+			String selectedType = typeOfItemsCombo.getSelectedItem().toString();
+			
+			if(selectedType.equals(new Integer(0).getClass().getSimpleName())) {
+				
+				return Integer.valueOf(valueField.getText());
+				
+			} else if (selectedType.equals(new String().getClass().getSimpleName())) {
+				
+				return valueField.getText();
+				
+			} else if (selectedType.equals(new Float(0F).getClass().getSimpleName())) {
+				
+				return Float.valueOf(valueField.getText());
+				
+			} else if (selectedType.equals(new Object().getClass().getSimpleName())) {
+				
+				return new Object();
+				
+			} else if (selectedType.equals(new Date().getClass().getSimpleName())) {
+				
+				String[] date = valueField.getText().split("\\.");
+				
+				int day = Integer.valueOf(date[0]);
+				int month = Integer.valueOf(date[1]);
+				int year = Integer.valueOf(date[2]);
+				return new Date(year - 1900, month, day);
+			}
+			
+		} catch (Exception e) {
+
+			JOptionPane.showMessageDialog(null, "Неверно заданно значение\n" + e.getMessage(), 
+					"Ошибка", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return null;
+	}
+
 	private static class ColJob {
 		
 		private static <T> List<String> findItems(String type, Collection<T> collection) {
@@ -537,8 +704,11 @@ public class opJavaTask1 {
 			
 			itemsToPrint.add("Коллекция \"" + rb.getText() + "\"\n{");
 			
+			int index = 0; 
+			
 			for (T item : collection) {
-				itemsToPrint.add(item.toString() + ", (" + item.getClass().getName() + ")");
+				itemsToPrint.add(index + " : " + item.toString() + ", (" + item.getClass().getName() + ")");
+				++index;
 			}
 			itemsToPrint.add("}");
 			
