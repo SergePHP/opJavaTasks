@@ -1,13 +1,9 @@
 package opJava.tasks;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import java.util.*;
-
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -20,12 +16,9 @@ import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
-import javax.swing.text.JTextComponent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ListSelectionModel;
@@ -619,7 +612,12 @@ public class opJavaTask1 {
 					if(hashMap.remove((Integer)index) == null) {
 						throw new IndexOutOfBoundsException("Array index out of range.");
 					}
-					
+					/*
+					 * Если элемент по индексу удален,
+					 * то индекс сохраняется в стеке
+					 * и используется для добавления
+					 * новых элементов в коллекцию.
+					 */
 					hmDelIndexes.add(index);						
 					ColJob.printCollection(ColJob.findAllItems(hashMap, false),
 							listModelDeleteAndShow);
@@ -633,7 +631,12 @@ public class opJavaTask1 {
 					if(treeMap.remove((Integer)index) == null) {
 						throw new IndexOutOfBoundsException("Array index out of range.");
 					}
-					
+					/*
+					 * Если элемент по индексу удален,
+					 * то индекс сохраняется в стеке
+					 * и используется для добавления
+					 * новых элементов в коллекцию.
+					 */
 					tmDelIndexes.add(index);
 					ColJob.printCollection(ColJob.findAllItems(treeMap, false),
 							listModelDeleteAndShow);
