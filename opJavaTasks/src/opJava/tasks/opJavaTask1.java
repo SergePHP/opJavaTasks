@@ -28,6 +28,7 @@ import javax.swing.ButtonModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ListSelectionModel;
 
 public class opJavaTask1 {
 
@@ -191,6 +192,7 @@ public class opJavaTask1 {
 		panel_2.add(label_1);
 		
 		listItemsTypes = new JList();
+		listItemsTypes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listItemsTypes.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		listItemsTypes.setBounds(22, 46, 147, 115);
 		panel_2.add(listItemsTypes);
@@ -210,7 +212,7 @@ public class opJavaTask1 {
 		frame.getContentPane().add(panel_3);
 		panel_3.setLayout(null);
 		
-		JButton btnFindItems = new JButton("Вывести найденые элементы в виде списка");
+		JButton btnFindItems = new JButton("Вывести найденные элементы в виде списка");
 		btnFindItems.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				findItemsInCollections();
@@ -317,6 +319,10 @@ public class opJavaTask1 {
 		JList listDeleteAndShow = new JList(listModelDeleteAndShow);
 		scrollPane_3.setViewportView(listDeleteAndShow);
 	}
+	/*
+	 *  Метод реализует функцию: 
+	 * "Вывести найденные элементы в виде списка"
+	 */
 	
 	private void findItemsInCollections() {
 
@@ -364,51 +370,59 @@ public class opJavaTask1 {
 			}
 		}
 	}
+	/*
+	 * Метод реализует функцию: 
+	 * "Создать и отобразить коллекцию"
+	 */
 	private void createCollection() {
 		
 		if (rbVector.isSelected()) {
 			if(vector == null) {
 				vector = new Vector();
 			}
-			ColJob.printCollection(ColJob.findAllItems(vector, rbVector),
+			ColJob.printCollection(ColJob.findAllItems(vector, true),
 					textAreaCollectionInfo);
 
 		} else if (rbArrayList.isSelected()) {
 			if(arrayList == null) {
 				arrayList = new ArrayList();
 			}
-			ColJob.printCollection(ColJob.findAllItems(arrayList, rbArrayList),
+			ColJob.printCollection(ColJob.findAllItems(arrayList, true),
 					textAreaCollectionInfo);
 			
 		} else if (rbLinkedList.isSelected()) {
 			if(linkedList == null) {
 				linkedList = new LinkedList();
 			}
-			ColJob.printCollection(ColJob.findAllItems(linkedList, rbLinkedList),
+			ColJob.printCollection(ColJob.findAllItems(linkedList, true),
 					textAreaCollectionInfo);
 			
 		} else if (rbHashMap.isSelected()) {
 			if(hashMap == null) {
 				hashMap = new HashMap();
 			}
-			ColJob.printCollection(ColJob.findAllItems(hashMap, rbHashMap),
+			ColJob.printCollection(ColJob.findAllItems(hashMap, true),
 					textAreaCollectionInfo);
 			
 		} else if (rbTreeMap.isSelected()) {
 			if(treeMap == null) {
 				treeMap = new TreeMap();
 			}
-			ColJob.printCollection(ColJob.findAllItems(treeMap, rbTreeMap),
+			ColJob.printCollection(ColJob.findAllItems(treeMap, true),
 					textAreaCollectionInfo);
 		}
 	}
+	/*
+	 * Метод реализует функцию: 
+	 * "Очистить коллекцию"
+	 */
 	private void clearCollection() {
 		
 		if (rbVector.isSelected()) {
 			
 			if(vector != null) {
 				vector.clear();
-				ColJob.printCollection(ColJob.findAllItems(vector, rbVector),
+				ColJob.printCollection(ColJob.findAllItems(vector, true),
 						textAreaCollectionInfo);
 			} else {
 				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
@@ -417,7 +431,7 @@ public class opJavaTask1 {
 			
 			if(arrayList != null) {
 				arrayList.clear();
-				ColJob.printCollection(ColJob.findAllItems(arrayList, rbArrayList),
+				ColJob.printCollection(ColJob.findAllItems(arrayList, true),
 						textAreaCollectionInfo);
 			} else {
 				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
@@ -427,7 +441,7 @@ public class opJavaTask1 {
 			
 			if(linkedList != null) {
 				linkedList.clear();
-				ColJob.printCollection(ColJob.findAllItems(linkedList, rbLinkedList),
+				ColJob.printCollection(ColJob.findAllItems(linkedList, true),
 						textAreaCollectionInfo);
 			} else {
 				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
@@ -436,7 +450,7 @@ public class opJavaTask1 {
 			
 			if(hashMap != null) {
 				hashMap.clear();
-				ColJob.printCollection(ColJob.findAllItems(hashMap, rbHashMap),
+				ColJob.printCollection(ColJob.findAllItems(hashMap, true),
 						textAreaCollectionInfo);
 			} else {
 				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
@@ -445,20 +459,23 @@ public class opJavaTask1 {
 			
 			if(treeMap != null) {
 				treeMap.clear();
-				ColJob.printCollection(ColJob.findAllItems(treeMap, rbTreeMap),
+				ColJob.printCollection(ColJob.findAllItems(treeMap, true),
 						textAreaCollectionInfo);
 			} else {
 				ColJob.printNoCollectionMessage(textAreaCollectionInfo);
 			}
 		}
 	}
-
+	/*
+	 * Метод реализует функцию:
+	 * "Отобразить коллекцию"
+	 */
 	private void printCollection() {
 		
 		if (rbVector.isSelected()) {
 			
 			if(vector != null) {
-				ColJob.printCollection(ColJob.findAllItems(vector),
+				ColJob.printCollection(ColJob.findAllItems(vector, false),
 						listModelCollectionContent);
 			} else {
 				ColJob.printNoCollectionMessage(listModelCollectionContent);
@@ -466,7 +483,7 @@ public class opJavaTask1 {
 		} else if (rbArrayList.isSelected()) {
 			
 			if(arrayList != null) {
-				ColJob.printCollection(ColJob.findAllItems(arrayList),
+				ColJob.printCollection(ColJob.findAllItems(arrayList, false),
 						listModelCollectionContent);
 			} else {
 				ColJob.printNoCollectionMessage(listModelCollectionContent);
@@ -475,7 +492,7 @@ public class opJavaTask1 {
 		} else if (rbLinkedList.isSelected()) {
 			
 			if(linkedList != null) {
-				ColJob.printCollection(ColJob.findAllItems(linkedList),
+				ColJob.printCollection(ColJob.findAllItems(linkedList, false),
 						listModelCollectionContent);
 			} else {
 				ColJob.printNoCollectionMessage(listModelCollectionContent);
@@ -483,7 +500,7 @@ public class opJavaTask1 {
 		} else if (rbHashMap.isSelected()) {
 			
 			if(hashMap != null) {
-				ColJob.printCollection(ColJob.findAllItems(hashMap),
+				ColJob.printCollection(ColJob.findAllItems(hashMap, false),
 						listModelCollectionContent);
 			} else {
 				ColJob.printNoCollectionMessage(listModelCollectionContent);
@@ -491,14 +508,17 @@ public class opJavaTask1 {
 		} else if (rbTreeMap.isSelected()) {
 			
 			if(treeMap != null) {
-				ColJob.printCollection(ColJob.findAllItems(treeMap),
+				ColJob.printCollection(ColJob.findAllItems(treeMap, false),
 						listModelCollectionContent);
 			} else {
 				ColJob.printNoCollectionMessage(listModelCollectionContent);
 			}
 		}
 	}
-
+	/*
+	 * Метод реализует функцию:
+	 * "Добавить элемент коллекции"
+	 */
 	private void addItemsToCollection() {
 		
 		listModelCollectionContent.clear();
@@ -555,7 +575,10 @@ public class opJavaTask1 {
 			}
 		}
 	}
-	
+	/*
+	 * Метод реализует функцию:
+	 * "Удалить элемент и отобразить коллекцию"
+	 */
 	private void deleteAndShow() {
 	
 		try {
@@ -566,7 +589,7 @@ public class opJavaTask1 {
 				
 				if(vector != null) {
 					vector.remove(index);
-					ColJob.printCollection(ColJob.findAllItems(vector),
+					ColJob.printCollection(ColJob.findAllItems(vector, false),
 							listModelDeleteAndShow);
 				} else {
 					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
@@ -575,7 +598,7 @@ public class opJavaTask1 {
 				
 				if(arrayList != null) {
 					arrayList.remove(index);
-					ColJob.printCollection(ColJob.findAllItems(arrayList),
+					ColJob.printCollection(ColJob.findAllItems(arrayList, false),
 							listModelDeleteAndShow);
 				} else {
 					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
@@ -584,7 +607,7 @@ public class opJavaTask1 {
 				
 				if(linkedList != null) {
 					linkedList.remove(index);
-					ColJob.printCollection(ColJob.findAllItems(linkedList),
+					ColJob.printCollection(ColJob.findAllItems(linkedList, false),
 							listModelDeleteAndShow);
 				} else {
 					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
@@ -598,7 +621,7 @@ public class opJavaTask1 {
 					}
 					
 					hmDelIndexes.add(index);						
-					ColJob.printCollection(ColJob.findAllItems(hashMap),
+					ColJob.printCollection(ColJob.findAllItems(hashMap, false),
 							listModelDeleteAndShow);
 				} else {
 					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
@@ -612,7 +635,7 @@ public class opJavaTask1 {
 					}
 					
 					tmDelIndexes.add(index);
-					ColJob.printCollection(ColJob.findAllItems(treeMap),
+					ColJob.printCollection(ColJob.findAllItems(treeMap, false),
 							listModelDeleteAndShow);
 				} else {
 					ColJob.printNoCollectionMessage(listModelDeleteAndShow);
@@ -626,6 +649,14 @@ public class opJavaTask1 {
 		}
 	}
 
+	/*
+	 * Метод определяет тип добавляемого значения
+	 * и возвращает введенное значение в поле 
+	 * ввода в виде объекта этого типа или null,
+	 * если введенное значение не соответствует
+	 * указанному типу 
+	 */
+	
 	private Object parseValue() {
 		
 		try {
@@ -651,6 +682,7 @@ public class opJavaTask1 {
 				
 				String[] date = valueField.getText().split("\\.");
 				
+				// Формат даты ДД.ММ.ГГГГ
 				int day = Integer.valueOf(date[0]);
 				int month = Integer.valueOf(date[1]);
 				int year = Integer.valueOf(date[2]);
@@ -659,15 +691,26 @@ public class opJavaTask1 {
 			
 		} catch (Exception e) {
 
-			JOptionPane.showMessageDialog(null, "Неверно заданно значение\n" + e.getMessage(), 
+			JOptionPane.showMessageDialog(null, "Неверно задано значение\n" + e.getMessage(), 
 					"Ошибка", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		return null;
 	}
-
+	/*
+	 * Статический класс, в котором реализован
+	 * набор методов для работы с коллекциями
+	 * и вывода отформатированной информации
+	 * в указанные поля вывода
+	 */
 	private static class ColJob {
-		
+		/*
+		 * Метод выполняет поиск элементов
+		 * указанного типа в коллекциях, которые
+		 * реализуют интерфейс Collection
+		 * и возвращает массив, содержащий найденные
+		 * объекты или строку "Элементы не найдены"
+		 */
 		private static <T> List<String> findItems(String type, Collection<T> collection) {
 			
 			List<String> itemsToPrint = new ArrayList<>();
@@ -682,6 +725,13 @@ public class opJavaTask1 {
 			}
 			return itemsToPrint;
 		}
+		/*
+		 * Метод выполняет поиск элементов
+		 * указанного типа в коллекциях, которые
+		 * реализуют интерфейс Map и возвращает массив,
+		 * содержащий найденные объекты 
+		 * или строку "Элементы не найдены"
+		 */
 		private static <K, V> List<String> findItems(String type, Map<K, V> map) {
 			
 			List<String> itemsToPrint = new ArrayList<>();
@@ -696,60 +746,74 @@ public class opJavaTask1 {
 			}
 			return itemsToPrint;
 		}
-		private static <T> List<String> findAllItems(Collection<T> collection) {
+		/*
+		 * Метод выполняет поиск всех элементов
+		 * в коллекциях, которые реализуют 
+		 * интерфейс Collection и возвращает массив,
+		 * содержащий найденные объекты 
+		 * или строку "Пустая коллекция"
+		 * Если установлен флаг formatted=true, то 
+		 * массив дополнительно форматируется
+		 */
+		private static <T> List<String> findAllItems(Collection<T> collection, Boolean formatted) {
 			
 			List<String> itemsToPrint = new ArrayList<>();
 			
-			for (T item : collection) {
+			if(!formatted) {
+				for (T item : collection) {
 					itemsToPrint.add(item.toString());
-			}
-			if(itemsToPrint.size() == 0) {
-				itemsToPrint.add("Пустая коллекция");
+				}
+				if(itemsToPrint.size() == 0) {
+					itemsToPrint.add("Пустая коллекция");
+				}
+			} else {
+				itemsToPrint.add("Коллекция \"" + collection.getClass().getName() + "\"\n{");
+				
+				int index = 0; 
+				
+				for (T item : collection) {
+					itemsToPrint.add(index + " : " + item.toString() + ", (" + item.getClass().getName() + ")");
+					++index;
+				}
+				itemsToPrint.add("}");
 			}
 			return itemsToPrint;
 		}
-		private static <K, V> List<String> findAllItems(Map<K, V> map) {
+		/*
+		 * Метод выполняет поиск всех элементов
+		 * в коллекциях, которые реализуют 
+		 * интерфейс Map и возвращает массив,
+		 * содержащий найденные объекты 
+		 * или строку "Пустая коллекция"
+		 * Если установлен флаг formatted=true, то 
+		 * массив дополнительно форматируется
+		 */
+		private static <K, V> List<String> findAllItems(Map<K, V> map, Boolean formatted) {
 			
 			List<String> itemsToPrint = new ArrayList<>();
 			
-			for (Map.Entry<K, V> entry : map.entrySet()) {
-					itemsToPrint.add(entry.getKey() + " : " + entry.getValue());
-			}	
-			if(itemsToPrint.size() == 0) {
-				itemsToPrint.add("Пустая коллекция");
+			if(!formatted) {
+				for (Map.Entry<K, V> entry : map.entrySet()) {
+				itemsToPrint.add(entry.getKey() + " : " + entry.getValue());
+				}
+				if(itemsToPrint.size() == 0) {
+					itemsToPrint.add("Пустая коллекция");
+				}	
+			} else {
+				itemsToPrint.add("Коллекция \"" + map.getClass().getName() + "\"\n{");
+				
+				for (Map.Entry<K, V> entry : map.entrySet()) {
+					itemsToPrint.add(entry.getKey() + " : " + entry.getValue() + 
+							", (" + entry.getKey().getClass().getName() + " : " + entry.getValue().getClass().getName() + ")");
+				}
+				itemsToPrint.add("}");
 			}
 			return itemsToPrint;
 		}
-		private static <T> List<String> findAllItems(Collection<T> collection, JRadioButton rb) {
-			
-			List<String> itemsToPrint = new ArrayList<>();
-			
-			itemsToPrint.add("Коллекция \"" + rb.getText() + "\"\n{");
-			
-			int index = 0; 
-			
-			for (T item : collection) {
-				itemsToPrint.add(index + " : " + item.toString() + ", (" + item.getClass().getName() + ")");
-				++index;
-			}
-			itemsToPrint.add("}");
-			
-			return itemsToPrint;
-		}
-		private static <K, V> List<String> findAllItems(Map<K, V> m, JRadioButton rb) {
-			
-			List<String> itemsToPrint = new ArrayList<>();
-			
-			itemsToPrint.add("Коллекция \"" + rb.getText() + "\"\n{");
-			
-			for (Map.Entry<K, V> entry : m.entrySet()) {
-				itemsToPrint.add(entry.getKey() + " : " + entry.getValue() + 
-						", (" + entry.getKey().getClass().getName() + " : " + entry.getValue().getClass().getName() + ")");
-			}
-			itemsToPrint.add("}");
-			
-			return itemsToPrint;
-		}
+		/*
+		 * Метод выполняет вывод массива строк
+		 * на элемент типа JList 
+		 */
 		private static void printCollection(List<String> printData, DefaultListModel listModel) {
 			
 			listModel.clear();
@@ -758,6 +822,10 @@ public class opJavaTask1 {
 				listModel.addElement(string);
 			}
 		}
+		/*
+		 * Метод выполняет вывод массива строк
+		 * на элемент типа JTextArea 
+		 */
 		private static void printCollection(List<String> printData, JTextArea textArea) {
 			
 			textArea.setText("");
@@ -766,12 +834,22 @@ public class opJavaTask1 {
 				textArea.append(string + "\n");
 			}
 		}
+		/*
+		 * Метод выполняет вывод сообщения:
+		 * "Коллекция не найдена"
+		 * на элемент типа JList 
+		 */
 		private static void printNoCollectionMessage(DefaultListModel listModel) {
 			
 			listModel.clear();
 			listModel.addElement("Коллекция не найдена");
 			
 		}
+		/*
+		 * Метод выполняет вывод сообщения:
+		 * "Коллекция не найдена"
+		 * на элемент типа JTextArea 
+		 */
 		private static void printNoCollectionMessage(JTextArea textArea) {
 			
 			textArea.setText("Коллекция не найдена");
