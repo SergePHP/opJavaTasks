@@ -11,7 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -24,6 +26,7 @@ import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Font;
@@ -136,7 +139,15 @@ public class opJavaTask2 {
 		scrollPane.setBounds(12, 116, 353, 239);
 		panel.add(scrollPane);
 		
-		matrix1 = new JTable(3, 3);
+		matrix1 = new JTable();
+		
+		DefaultTableModel dtm = new DefaultTableModel(3, 3) {
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
+		matrix1.setModel(dtm);
+
 		matrix1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		matrix1.setRowHeight(50);
 		matrix1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -228,7 +239,15 @@ public class opJavaTask2 {
 		scrollPane_1.setBounds(12, 116, 354, 239);
 		panel_1.add(scrollPane_1);
 		
-		matrix2 = new JTable(3, 3);
+		matrix2 = new JTable();
+		
+		DefaultTableModel dtm2 = new DefaultTableModel(3, 3) {
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
+		matrix2.setModel(dtm2);
+		
 		matrix2.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		matrix2.setRowHeight(50);
 		matrix2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -272,6 +291,18 @@ public class opJavaTask2 {
 		btnPerformOperation.setBounds(244, 525, 342, 39);
 		frame.getContentPane().add(btnPerformOperation);
 	}
+	private void alignTableCells(JTable matrix){
+
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		TableModel tm = matrix.getModel();
+		
+        for (int i = 0; i < tm.getColumnCount(); i++)
+        {
+        	matrix.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+	}
 	private void populateMatrix(JTable matrix, JTextField low, JTextField high) {
 		
 		int x = 0;
@@ -282,6 +313,8 @@ public class opJavaTask2 {
 		try {
 			x = Integer.valueOf(low.getText());
 			y = Integer.valueOf(high.getText());
+
+			alignTableCells(matrix);
 			
 			DefaultTableModel tableModel = (DefaultTableModel) matrix.getModel();
 			
@@ -362,6 +395,7 @@ public class opJavaTask2 {
 				}
 			tableModel.addRow(row);					
 		}
+		alignTableCells(matrix);
 	}
 	/*
 	 *  Метод для исправления размера
@@ -381,6 +415,7 @@ public class opJavaTask2 {
 				}
 			tableModel.addRow(row);					
 		}
+		alignTableCells(matrix);
 	}
 	private void wrongSizeDialog() {
 		
@@ -453,6 +488,7 @@ public class opJavaTask2 {
 		scrollPane.setBounds(12, 13, 351, 249);
 		dialog.getContentPane().add(scrollPane);
 
+		alignTableCells(matrix);
 		scrollPane.setViewportView(matrix);
 
 		JButton btnOk = new JButton("Готово");
