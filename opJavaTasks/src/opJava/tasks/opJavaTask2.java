@@ -1,12 +1,8 @@
 package opJava.tasks;
 
 import java.awt.EventQueue;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.Vector;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -25,10 +21,7 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-
 import java.awt.Font;
 
 public class opJavaTask2 {
@@ -58,6 +51,8 @@ public class opJavaTask2 {
 	private JRadioButton rdMult;
 	private JLabel label_3;
 	private JLabel label_4;
+	private Boolean matrix1Populated = false;
+	private Boolean matrix2Populated = false;
 
 	/**
 	 * Launch the application.
@@ -108,6 +103,10 @@ public class opJavaTask2 {
 		colsMatrix1.setColumns(10);
 		
 		JButton btnSetSizeMatrix1 = new JButton("Установить");
+		/*
+		 * Обработчик нажатия кнопки
+		 * изменения размера матрицы
+		 */
 		btnSetSizeMatrix1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setMatrixSize(matrix1, rowsMatrix1, colsMatrix1);
@@ -129,9 +128,13 @@ public class opJavaTask2 {
 		hiRangeMatrix1.setColumns(10);
 		
 		JButton btnPopulateMatrix1 = new JButton("Заполнить");
+		/*
+		 * Обработчик нажатия кнопки
+		 * заполнения матрицы значениями
+		 */
 		btnPopulateMatrix1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				populateMatrix(matrix1, loRangeMatrix1, hiRangeMatrix1);
+				matrix1Populated = populateMatrix(matrix1, loRangeMatrix1, hiRangeMatrix1);
 			}
 		});
 		btnPopulateMatrix1.setBounds(331, 48, 97, 58);
@@ -142,7 +145,10 @@ public class opJavaTask2 {
 		panel.add(scrollPane);
 		
 		matrix1 = new JTable();
-		
+		/*
+		 * Отключаю возможность редактирования 
+		 * матрицы №1 из интерфейса 
+		 */
 		DefaultTableModel dtm = new DefaultTableModel(3, 3) {
 		    public boolean isCellEditable(int row, int column) {
 		        return false;
@@ -158,9 +164,14 @@ public class opJavaTask2 {
 		colsMatrix1.setText(Integer.toString(matrix1.getColumnCount()));
 		
 		btnClearMatrix1 = new JButton("Очистить");
+		/*
+		 * Обработчик нажатия кнопки
+		 * очистить матрицу
+		 */
 		btnClearMatrix1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearMatrix(matrix1);
+				matrix1Populated = false;
 			}
 		});
 		btnClearMatrix1.setBounds(161, 371, 97, 25);
@@ -199,6 +210,10 @@ public class opJavaTask2 {
 		panel_1.add(colsMatrix2);
 		
 		btnSetSizeMatrix2 = new JButton("Установить");
+		/*
+		 * Обработчик нажатия кнопки
+		 * изменения размера матрицы
+		 */
 		btnSetSizeMatrix2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setMatrixSize(matrix2, rowsMatrix2, colsMatrix2);
@@ -220,18 +235,27 @@ public class opJavaTask2 {
 		panel_1.add(hiRangeMatrix2);
 		
 		btnPopulateMatrix2 = new JButton("Заполнить");
+		/*
+		 * Обработчик нажатия кнопки
+		 * заполнения матрицы значениями
+		 */
 		btnPopulateMatrix2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				populateMatrix(matrix2, loRangeMatrix2, hiRangeMatrix2);
+				matrix2Populated = populateMatrix(matrix2, loRangeMatrix2, hiRangeMatrix2);
 			}
 		});
 		btnPopulateMatrix2.setBounds(331, 48, 97, 58);
 		panel_1.add(btnPopulateMatrix2);
 		
 		btnClearMatrix2 = new JButton("Очистить");
+		/*
+		 * Обработчик нажатия кнопки
+		 * очистить матрицу
+		 */
 		btnClearMatrix2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearMatrix(matrix2);
+				matrix2Populated = false;
 			}
 		});
 		btnClearMatrix2.setBounds(170, 371, 97, 25);
@@ -250,6 +274,11 @@ public class opJavaTask2 {
 		panel_1.add(scrollPane_1);
 		
 		matrix2 = new JTable();
+		
+		/*
+		 * Отключаю возможность редактирования 
+		 * матрицы №2 из интерфейса 
+		 */
 		
 		DefaultTableModel dtm2 = new DefaultTableModel(3, 3) {
 		    public boolean isCellEditable(int row, int column) {
@@ -294,14 +323,32 @@ public class opJavaTask2 {
 		JButton btnPerformOperation = new JButton("Выполнить выбранное действие над матрицами");
 		btnPerformOperation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/*
+				 * Проверка, заполнены ли таблицы значениями
+				 * Если нет, вывожу предупреждение
+				 */
+				if (!matrix1Populated || !matrix2Populated) {
+					JOptionPane.showMessageDialog(null, "Для выполнения операции необходимо\nзаполнить матрицы значениями.", 
+							"Предупреждение", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
 				
 				if (rdAdd.isSelected()) {
+					/*
+					 * Выполнить операцию сложения матриц
+					 */
 					addMatrix(matrix1, matrix2);
 					
 				} else if (rdSub.isSelected()) {
+					/*
+					 * Выполнить операцию вычитания матриц
+					 */
 					subMatrix();
 					
 				} else {
+					/*
+					 * Выполнить операцию умножения матриц
+					 */
 					multMatrix();
 				}
 			}
@@ -309,6 +356,10 @@ public class opJavaTask2 {
 		btnPerformOperation.setBounds(288, 529, 342, 39);
 		frame.getContentPane().add(btnPerformOperation);
 	}
+	/*
+	 * Метод выравнивает текст в ячейке
+	 * таблицы по центру 
+	 */
 	private void alignTableCells(JTable matrix){
 
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -321,7 +372,12 @@ public class opJavaTask2 {
         	matrix.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 	}
-	private void populateMatrix(JTable matrix, JTextField low, JTextField high) {
+	/*
+	 * Метод заполняет матрицу значениями
+	 * Если заполнить удалось, возвращает true,
+	 * в обратно случае возвращает false
+	 */
+	private Boolean populateMatrix(JTable matrix, JTextField low, JTextField high) {
 		
 		int x = 0;
 		int y = 0;
@@ -337,9 +393,15 @@ public class opJavaTask2 {
 			DefaultTableModel tableModel = (DefaultTableModel) matrix.getModel();
 			
 			int currentRows = tableModel.getRowCount();
-			tableModel.setRowCount(0);
+			
+			/*
+			 * Если указаны значения диапазона 0 - 0,
+			 * то матрица заполняется произвольными
+			 * значениями в диапазоне от 0 до 99
+			 */
 			
 			if (x == 0 && y == 0) {
+				tableModel.setRowCount(0);
 				for (int i = 0; i < currentRows; i++) {
 					Vector<Integer> row = new Vector<Integer>();
 					for (int j = 0; j < matrix.getColumnCount(); j++) {
@@ -348,10 +410,15 @@ public class opJavaTask2 {
 						}
 					tableModel.addRow(row);					
 					}
-				return;
-			} else if ((y - x) < (matrix.getRowCount() * matrix.getColumnCount()))
+				return true;
+			} else if ((y - x) < (currentRows * matrix.getColumnCount()))
 				throw new Exception();
 
+			/*
+			 *  Если диапазон указан, заполнить
+			 *  значениями в указанном диапазоне
+			 */
+			tableModel.setRowCount(0);
 			for (int i = 0; i < currentRows; i++) {
 				Vector<Integer> row = new Vector<Integer>();
 				for (int j = 0; j < matrix.getColumnCount(); j++) {
@@ -362,12 +429,25 @@ public class opJavaTask2 {
 				}
 				tableModel.addRow(row);
 			}
+			return true;
+			/*
+			 * В случае, если поле для ввода значений
+			 * диапазона пустое или указанного диапазона
+			 * недостаточно для заполнения матрицы
+			 * генерируется исключение и выводится предупреждение 
+			 */
 		} catch (Exception e1) {
+			/*
+			 * Диалог с предупреждением
+			 */
 			JOptionPane.showMessageDialog(null, "Неверно указаны значения диапазона.", 
 					"Предупреждение", JOptionPane.WARNING_MESSAGE);
-			return;
+			return false;
 		}
 	}
+	/*
+	 * Метод устанавливает размер матрицы
+	 */
 	private void setMatrixSize(JTable matrix, JTextField rows, JTextField cols) {
 		
 		int x = 0;
@@ -387,6 +467,9 @@ public class opJavaTask2 {
 			tableModel.setColumnCount(x);
 			tableModel.setRowCount(y);
 	}
+	/*
+	 * Метод очищает указанную матрицу
+	 */
 	private void clearMatrix(JTable matrix) {
 		
 		DefaultTableModel tableModel = (DefaultTableModel) matrix.getModel();
@@ -435,6 +518,12 @@ public class opJavaTask2 {
 		}
 		alignTableCells(matrix);
 	}
+	/*
+	 * Метод выводит диалог с предупреждением
+	 * о несоответствии размеров матриц для
+	 * выбранной операции и предлагает исправить
+	 * выбранную матрицу
+	 */
 	private void wrongSizeDialog() {
 		
 		final ButtonGroup buttonGroup_1 = new ButtonGroup();
@@ -458,14 +547,32 @@ public class opJavaTask2 {
 			public void actionPerformed(ActionEvent e) {
 				if (rdMatrix1.isSelected()) {
 					if (rdAdd.isSelected() || rdSub.isSelected()) {
+						/*
+						 * Вызываем метод исправления размера матрицы
+						 * для операций сложения и вычитания
+						 * для первой матрицы
+						 */
 						changeSizeForAddSub(matrix1, matrix2.getColumnCount(), matrix2.getRowCount());
 					} else {
+						/*
+						 * Вызываем метод исправления размера матрицы
+						 * для операции умножения для первой матрицы
+						 */
 						changeSizeForMult(matrix1, matrix2.getRowCount(), matrix1.getRowCount());
 					}
 				} else {
 					if (rdAdd.isSelected() || rdSub.isSelected()) {
+						/*
+						 * Вызываем метод исправления размера матрицы
+						 * для операций сложения и вычитания
+						 * для второй матрицы
+						 */
 						changeSizeForAddSub(matrix2, matrix1.getColumnCount(), matrix1.getRowCount());
 					} else {
+						/*
+						 * Вызываем метод исправления размера матрицы
+						 * для операции умножения для второй матрицы
+						 */
 						changeSizeForMult(matrix2, matrix2.getColumnCount(), matrix1.getColumnCount());
 					}
 				}
@@ -491,6 +598,10 @@ public class opJavaTask2 {
 		dialog.getContentPane().add(textPane);
 		dialog.setVisible(true);
 	}
+	/*
+	 * Метод выводит диалог с 
+	 * результирующей матрицей
+	 */
 	private void showResult(JTable matrix) {
 		
 		matrix.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -519,12 +630,18 @@ public class opJavaTask2 {
 		dialog.getContentPane().add(btnOk);
 		dialog.setVisible(true);
 	}
-/*
- * ----------------------------------------------------------------------------
- */
+	/*
+	 * Метод выполняет операцию сложения матриц
+	 */
 	private void addMatrix(JTable matrix1, JTable matrix2){
 		
-	if (matrix1.getRowCount() != matrix2.getRowCount() ||
+		/*
+		 * Проверяю размерность, если размерность неверная
+		 * вывожу диалог с предупреждением и предложением
+		 * исправить размер для выбранной операции 
+		 */
+
+		if (matrix1.getRowCount() != matrix2.getRowCount() ||
 				matrix1.getColumnCount() != matrix2.getColumnCount()) {
 		
 			wrongSizeDialog();
@@ -545,10 +662,20 @@ public class opJavaTask2 {
 				}
 			tableModel.addRow(row);					
 		}
+		/*
+		 * Вывожу диалог с результирующей таблицей
+		 */
 		showResult(resultMatrix);
 	}
+	/*
+	 * Метод выполняет операцию вычитания матриц
+	 */
 	private void subMatrix() {
 		
+		/*
+		 * Создаю временную таблицу и заполняю
+		 * значениями таблицы №2 умноженными на -1
+		 */
 		JTable tempMatrix = new JTable();
 		DefaultTableModel tableModel = (DefaultTableModel) tempMatrix.getModel();
 		
@@ -562,10 +689,22 @@ public class opJavaTask2 {
 				}
 			tableModel.addRow(row);					
 		}
+		/*
+		 * Выполняю операцию сложения для 
+		 * таблицы №1 и временной таблицы
+		 */
 		addMatrix(matrix1, tempMatrix);
 	}
+	/*
+	 * Метод выполняет операцию умножения матриц
+	 */
 	private void multMatrix() {
 		
+		/*
+		 * Проверяю размерность, если размерность неверная
+		 * вывожу диалог с предупреждением и предложением
+		 * исправить размер для выбранной операции 
+		 */
 		if (matrix1.getColumnCount() != matrix2.getRowCount()) {
 			wrongSizeDialog();
 			return;
@@ -588,6 +727,9 @@ public class opJavaTask2 {
 				}
 			tableModel.addRow(row);					
 		}
+		/*
+		 * Вывожу диалог с результирующей таблицей
+		 */
 		showResult(resultMatrix);
 
 	}
