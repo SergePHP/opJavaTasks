@@ -56,6 +56,8 @@ public class opJavaTask2 {
 	private JRadioButton rdAdd;
 	private JRadioButton rdSub;
 	private JRadioButton rdMult;
+	private JLabel label_3;
+	private JLabel label_4;
 
 	/**
 	 * Launch the application.
@@ -85,23 +87,23 @@ public class opJavaTask2 {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 814, 627);
+		frame.setBounds(100, 100, 924, 627);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createTitledBorder("Матрица 1"));
-		panel.setBounds(12, 13, 379, 409);
+		panel.setBounds(12, 13, 440, 409);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
 		rowsMatrix1 = new JTextField();
-		rowsMatrix1.setBounds(12, 46, 59, 22);
+		rowsMatrix1.setBounds(74, 49, 59, 22);
 		panel.add(rowsMatrix1);
 		rowsMatrix1.setColumns(10);
 		
 		colsMatrix1 = new JTextField();
-		colsMatrix1.setBounds(12, 81, 59, 22);
+		colsMatrix1.setBounds(74, 84, 59, 22);
 		panel.add(colsMatrix1);
 		colsMatrix1.setColumns(10);
 		
@@ -111,18 +113,18 @@ public class opJavaTask2 {
 				setMatrixSize(matrix1, rowsMatrix1, colsMatrix1);
 			}
 		});
-		btnSetSizeMatrix1.setBounds(83, 45, 103, 58);
+		btnSetSizeMatrix1.setBounds(145, 48, 103, 58);
 		panel.add(btnSetSizeMatrix1);
 		
 		loRangeMatrix1 = new JTextField();
 		loRangeMatrix1.setText("0");
-		loRangeMatrix1.setBounds(198, 46, 59, 22);
+		loRangeMatrix1.setBounds(260, 49, 59, 22);
 		panel.add(loRangeMatrix1);
 		loRangeMatrix1.setColumns(10);
 		
 		hiRangeMatrix1 = new JTextField();
 		hiRangeMatrix1.setText("0");
-		hiRangeMatrix1.setBounds(198, 81, 59, 22);
+		hiRangeMatrix1.setBounds(260, 84, 59, 22);
 		panel.add(hiRangeMatrix1);
 		hiRangeMatrix1.setColumns(10);
 		
@@ -132,11 +134,11 @@ public class opJavaTask2 {
 				populateMatrix(matrix1, loRangeMatrix1, hiRangeMatrix1);
 			}
 		});
-		btnPopulateMatrix1.setBounds(269, 45, 97, 58);
+		btnPopulateMatrix1.setBounds(331, 48, 97, 58);
 		panel.add(btnPopulateMatrix1);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 116, 353, 239);
+		scrollPane.setBounds(12, 119, 415, 239);
 		panel.add(scrollPane);
 		
 		matrix1 = new JTable();
@@ -161,31 +163,39 @@ public class opJavaTask2 {
 				clearMatrix(matrix1);
 			}
 		});
-		btnClearMatrix1.setBounds(136, 368, 97, 25);
+		btnClearMatrix1.setBounds(161, 371, 97, 25);
 		panel.add(btnClearMatrix1);
 		
 		JLabel lblNewLabel = new JLabel("Размер матрицы");
-		lblNewLabel.setBounds(12, 23, 119, 16);
+		lblNewLabel.setBounds(74, 26, 119, 16);
 		panel.add(lblNewLabel);
 		
 		JLabel label = new JLabel("Значения матрицы");
-		label.setBounds(198, 23, 119, 16);
+		label.setBounds(260, 26, 119, 16);
 		panel.add(label);
+		
+		label_3 = new JLabel("Строк");
+		label_3.setBounds(34, 49, 34, 16);
+		panel.add(label_3);
+		
+		label_4 = new JLabel("Столбцов");
+		label_4.setBounds(12, 84, 56, 16);
+		panel.add(label_4);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(BorderFactory.createTitledBorder("Матрица 2"));
-		panel_1.setBounds(403, 13, 379, 409);
+		panel_1.setBounds(453, 13, 440, 409);
 		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		rowsMatrix2 = new JTextField();
 		rowsMatrix2.setColumns(10);
-		rowsMatrix2.setBounds(12, 46, 59, 22);
+		rowsMatrix2.setBounds(74, 49, 59, 22);
 		panel_1.add(rowsMatrix2);
 		
 		colsMatrix2 = new JTextField();
 		colsMatrix2.setColumns(10);
-		colsMatrix2.setBounds(12, 81, 59, 22);
+		colsMatrix2.setBounds(74, 84, 59, 22);
 		panel_1.add(colsMatrix2);
 		
 		btnSetSizeMatrix2 = new JButton("Установить");
@@ -194,19 +204,19 @@ public class opJavaTask2 {
 				setMatrixSize(matrix2, rowsMatrix2, colsMatrix2);
 			}
 		});
-		btnSetSizeMatrix2.setBounds(83, 45, 103, 58);
+		btnSetSizeMatrix2.setBounds(145, 48, 103, 58);
 		panel_1.add(btnSetSizeMatrix2);
 		
 		loRangeMatrix2 = new JTextField();
 		loRangeMatrix2.setText("0");
 		loRangeMatrix2.setColumns(10);
-		loRangeMatrix2.setBounds(198, 46, 59, 22);
+		loRangeMatrix2.setBounds(260, 49, 59, 22);
 		panel_1.add(loRangeMatrix2);
 		
 		hiRangeMatrix2 = new JTextField();
 		hiRangeMatrix2.setText("0");
 		hiRangeMatrix2.setColumns(10);
-		hiRangeMatrix2.setBounds(198, 81, 59, 22);
+		hiRangeMatrix2.setBounds(260, 84, 59, 22);
 		panel_1.add(hiRangeMatrix2);
 		
 		btnPopulateMatrix2 = new JButton("Заполнить");
@@ -215,7 +225,7 @@ public class opJavaTask2 {
 				populateMatrix(matrix2, loRangeMatrix2, hiRangeMatrix2);
 			}
 		});
-		btnPopulateMatrix2.setBounds(269, 45, 97, 58);
+		btnPopulateMatrix2.setBounds(331, 48, 97, 58);
 		panel_1.add(btnPopulateMatrix2);
 		
 		btnClearMatrix2 = new JButton("Очистить");
@@ -224,19 +234,19 @@ public class opJavaTask2 {
 				clearMatrix(matrix2);
 			}
 		});
-		btnClearMatrix2.setBounds(136, 368, 97, 25);
+		btnClearMatrix2.setBounds(170, 371, 97, 25);
 		panel_1.add(btnClearMatrix2);
 		
 		label_1 = new JLabel("Размер матрицы");
-		label_1.setBounds(12, 23, 119, 16);
+		label_1.setBounds(74, 26, 119, 16);
 		panel_1.add(label_1);
 		
 		label_2 = new JLabel("Значения матрицы");
-		label_2.setBounds(198, 23, 119, 16);
+		label_2.setBounds(260, 26, 119, 16);
 		panel_1.add(label_2);
 		
 		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(12, 116, 354, 239);
+		scrollPane_1.setBounds(12, 119, 416, 239);
 		panel_1.add(scrollPane_1);
 		
 		matrix2 = new JTable();
@@ -257,20 +267,28 @@ public class opJavaTask2 {
 		colsMatrix2.setText(Integer.toString(matrix2.getColumnCount()));
 		rowsMatrix2.setText(Integer.toString(matrix2.getRowCount()));
 		
+		JLabel lblNewLabel_1 = new JLabel("Строк");
+		lblNewLabel_1.setBounds(34, 52, 34, 16);
+		panel_1.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Столбцов");
+		lblNewLabel_2.setBounds(12, 87, 56, 16);
+		panel_1.add(lblNewLabel_2);
+		
 		rdAdd = new JRadioButton("Сложение матриц");
 		rdAdd.setSelected(true);
 		buttonGroup.add(rdAdd);
-		rdAdd.setBounds(336, 431, 168, 25);
+		rdAdd.setBounds(380, 435, 168, 25);
 		frame.getContentPane().add(rdAdd);
 		
 		rdSub = new JRadioButton("Вычитание матриц");
 		buttonGroup.add(rdSub);
-		rdSub.setBounds(336, 461, 168, 25);
+		rdSub.setBounds(380, 465, 168, 25);
 		frame.getContentPane().add(rdSub);
 		
 		rdMult = new JRadioButton("Умножение матриц");
 		buttonGroup.add(rdMult);
-		rdMult.setBounds(336, 491, 168, 25);
+		rdMult.setBounds(380, 495, 168, 25);
 		frame.getContentPane().add(rdMult);
 		
 		JButton btnPerformOperation = new JButton("Выполнить выбранное действие над матрицами");
@@ -288,7 +306,7 @@ public class opJavaTask2 {
 				}
 			}
 		});
-		btnPerformOperation.setBounds(244, 525, 342, 39);
+		btnPerformOperation.setBounds(288, 529, 342, 39);
 		frame.getContentPane().add(btnPerformOperation);
 	}
 	private void alignTableCells(JTable matrix){
@@ -421,7 +439,7 @@ public class opJavaTask2 {
 		
 		final ButtonGroup buttonGroup_1 = new ButtonGroup();
 		final JDialog dialog = new JDialog(frame, "Ошибка размерности", true);
-		dialog.setLayout(null);
+		dialog.getContentPane().setLayout(null);
 		dialog.setBounds(100, 100, 292, 253);
 		
 		JRadioButton rdMatrix1 = new JRadioButton("Матрица 1");
@@ -480,7 +498,7 @@ public class opJavaTask2 {
 		matrix.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		final JDialog dialog = new JDialog(frame, "Результат выполнения операции", true);
-		dialog.setLayout(null);
+		dialog.getContentPane().setLayout(null);
 		dialog.setBounds(100, 100, 394, 360);
 
 		
