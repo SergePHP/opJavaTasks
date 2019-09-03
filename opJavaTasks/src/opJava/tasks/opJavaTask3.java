@@ -4,7 +4,11 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.awt.Rectangle;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -14,6 +18,10 @@ import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Vector;
+import java.awt.event.ActionEvent;
 
 public class opJavaTask3 {
 
@@ -22,11 +30,13 @@ public class opJavaTask3 {
 	private JTextField lineStartY;
 	private JTextField lineEndX;
 	private JTextField lineEndY;
-	private JTable tableOfLines;
+	private JTable lines;
 	private JTextField rectUpX;
 	private JTextField rectUpY;
 	private JTextField rectDownX;
 	private JTextField rectDownY;
+	private Rectangle rectangle;
+	private JTextArea rectInfo;
 
 	/**
 	 * Launch the application.
@@ -102,10 +112,20 @@ public class opJavaTask3 {
 		frame.getContentPane().add(lblY2);
 		
 		JButton btnAddLine = new JButton("Добавить отрезок");
+		btnAddLine.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addLine();
+			}
+		});
 		btnAddLine.setBounds(12, 99, 285, 25);
 		frame.getContentPane().add(btnAddLine);
 		
 		JButton btnDeleteLine = new JButton("Удалить отрезок");
+		btnDeleteLine.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteLine();
+			}
+		});
 		btnDeleteLine.setBounds(12, 137, 285, 25);
 		frame.getContentPane().add(btnDeleteLine);
 		
@@ -114,12 +134,12 @@ public class opJavaTask3 {
 		frame.getContentPane().add(scrollPane);
 		
 		String[] header = {"X", "Y", "X", "Y"};	
-		DefaultTableModel model = new DefaultTableModel(header, 5); 	
-		tableOfLines = new JTable(model);
-		tableOfLines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		DefaultTableModel model = new DefaultTableModel(header, 0); 	
+		lines = new JTable(model);
+		lines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 
-		scrollPane.setViewportView(tableOfLines);
+		scrollPane.setViewportView(lines);
 		
 		JLabel label = new JLabel("Верхний левый угол прямоугольной области:");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -168,13 +188,19 @@ public class opJavaTask3 {
 		frame.getContentPane().add(label_6);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(369, 188, 279, 158);
+		scrollPane_1.setBounds(354, 188, 294, 158);
 		frame.getContentPane().add(scrollPane_1);
 		
-		JTextArea rectInfo = new JTextArea();
+		rectInfo = new JTextArea();
+		rectInfo.setFont(new Font("Arial", Font.PLAIN, 14));
 		scrollPane_1.setViewportView(rectInfo);
 		
 		JButton btnCreateRect = new JButton("Установить координаты прямоугольной области");
+		btnCreateRect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createRect();
+			}
+		});
 		btnCreateRect.setBounds(12, 359, 636, 37);
 		frame.getContentPane().add(btnCreateRect);
 		
@@ -197,5 +223,68 @@ public class opJavaTask3 {
 		
 		JTextArea intersectionInfo = new JTextArea();
 		scrollPane_2.setViewportView(intersectionInfo);
+	}
+	/*
+	 * Метод читает введенные значения координат
+	 * и возвращает целочисленный массив с координатами
+	 */
+	private int[] readCoordinates(JTextField x1, JTextField y1,
+			JTextField x2, JTextField y2) {
+		
+		int[] coordinates = new int[4];
+		
+		try {
+			coordinates[0] = Integer.valueOf(x1.getText());
+			coordinates[1] = Integer.valueOf(y1.getText());
+			coordinates[2] = Integer.valueOf(x2.getText());
+			coordinates[3] = Integer.valueOf(y2.getText());
+			return coordinates;
+			
+		} catch (NumberFormatException e1) {
+			JOptionPane.showMessageDialog(null, "Неверно указаны координаты\nДопустимы только целочисленные значения.", 
+					"Предупреждение", JOptionPane.WARNING_MESSAGE);
+			return null;
+		}
+	}
+	/*
+	 * Метод предназначен для добавления отрезка
+	 */
+	private void addLine() {
+		int[] lineCoord = readCoordinates(lineStartX, lineStartY, 
+				lineEndX, lineEndY);
+		if(lineCoord != null) {
+			DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
+			Vector<String> row = new Vector<>();
+			for (int i = 0; i < lineCoord.length; i++) {
+				row.add(Integer.toString(lineCoord[i]));
+			}
+			tableModel.addRow(row);
+		}
+	}
+	/*
+	 * Метод предназначен для удаления отрезка
+	 */
+	private void deleteLine() {
+		
+		DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
+		int row = lines.getSelectedRow();
+		if (row != -1) {
+			tableModel.removeRow(row);	
+		}
+	}
+	/*
+	 * Метод создает прямоугольник
+	 */
+	private void createRect(){
+		int[] rectCoord = readCoordinates(rectUpX, rectUpY, 
+				rectDownX, rectDownY);
+		if(rectCoord != null) {
+			rectangle = new Rectangle(rectCoord[0], rectCoord[1],
+					rectCoord[2], rectCoord[3]);
+			rectInfo.setText("");
+			rectInfo.setText("Задан прямоугольник с координатами:\nx1="
+					+ rectangle.x + ", y1=" + rectangle.y + ","
+					+ " x2=" + rectangle.width + ", y2=" + rectangle.height);
+		}
 	}
 }
