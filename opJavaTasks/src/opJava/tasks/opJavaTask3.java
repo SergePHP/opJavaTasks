@@ -24,19 +24,20 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.ListSelectionModel;
 
 public class opJavaTask3 {
 
 	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTable table;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
+	private JTextField lineStartX;
+	private JTextField lineStartY;
+	private JTextField lineEndX;
+	private JTextField lineEndY;
+	private JTable tableOfLines;
+	private JTextField rectUpX;
+	private JTextField rectUpY;
+	private JTextField rectDownX;
+	private JTextField rectDownY;
 
 	/**
 	 * Launch the application.
@@ -75,80 +76,81 @@ public class opJavaTask3 {
 		lblNewLabel.setBounds(25, 13, 194, 16);
 		frame.getContentPane().add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(12, 64, 58, 22);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		lineStartX = new JTextField();
+		lineStartX.setBounds(12, 64, 58, 22);
+		frame.getContentPane().add(lineStartX);
+		lineStartX.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(82, 64, 58, 22);
-		frame.getContentPane().add(textField_1);
+		lineStartY = new JTextField();
+		lineStartY.setColumns(10);
+		lineStartY.setBounds(82, 64, 58, 22);
+		frame.getContentPane().add(lineStartY);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(169, 64, 58, 22);
-		frame.getContentPane().add(textField_2);
+		lineEndX = new JTextField();
+		lineEndX.setColumns(10);
+		lineEndX.setBounds(169, 64, 58, 22);
+		frame.getContentPane().add(lineEndX);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(239, 64, 58, 22);
-		frame.getContentPane().add(textField_3);
+		lineEndY = new JTextField();
+		lineEndY.setColumns(10);
+		lineEndY.setBounds(239, 64, 58, 22);
+		frame.getContentPane().add(lineEndY);
 		
-		JLabel lblXY = new JLabel("x");
-		lblXY.setBounds(12, 42, 33, 16);
-		frame.getContentPane().add(lblXY);
+		JLabel lblX1 = new JLabel("x");
+		lblX1.setBounds(12, 42, 33, 16);
+		frame.getContentPane().add(lblX1);
 		
-		JLabel lblY = new JLabel("y");
-		lblY.setBounds(82, 42, 33, 16);
-		frame.getContentPane().add(lblY);
+		JLabel lblY1 = new JLabel("y");
+		lblY1.setBounds(82, 42, 33, 16);
+		frame.getContentPane().add(lblY1);
 		
-		JLabel label_1 = new JLabel("x");
-		label_1.setBounds(169, 42, 33, 16);
-		frame.getContentPane().add(label_1);
+		JLabel lblX2 = new JLabel("x");
+		lblX2.setBounds(169, 42, 33, 16);
+		frame.getContentPane().add(lblX2);
 		
-		JLabel lblY_1 = new JLabel("y");
-		lblY_1.setBounds(239, 42, 33, 16);
-		frame.getContentPane().add(lblY_1);
+		JLabel lblY2 = new JLabel("y");
+		lblY2.setBounds(239, 42, 33, 16);
+		frame.getContentPane().add(lblY2);
 		
-		JButton btnNewButton = new JButton("Добавить отрезок");
-		btnNewButton.setBounds(12, 99, 285, 25);
-		frame.getContentPane().add(btnNewButton);
+		JButton btnAddLine = new JButton("Добавить отрезок");
+		btnAddLine.setBounds(12, 99, 285, 25);
+		frame.getContentPane().add(btnAddLine);
 		
-		JButton button = new JButton("Удалить отрезок");
-		button.setBounds(12, 137, 285, 25);
-		frame.getContentPane().add(button);
+		JButton btnDeleteLine = new JButton("Удалить отрезок");
+		btnDeleteLine.setBounds(12, 137, 285, 25);
+		frame.getContentPane().add(btnDeleteLine);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(315, 15, 333, 147);
 		frame.getContentPane().add(scrollPane);
 		
 		String[] header = {"X", "Y", "X", "Y"};	
-		DefaultTableModel model = new DefaultTableModel(header, 6); 	
-		table = new JTable(model);
+		DefaultTableModel model = new DefaultTableModel(header, 5); 	
+		tableOfLines = new JTable(model);
+		tableOfLines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 
-		scrollPane.setViewportView(table);
+		scrollPane.setViewportView(tableOfLines);
 		
 		JLabel label = new JLabel("Верхний левый угол прямоугольной области:");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label.setBounds(12, 185, 377, 16);
+		label.setBounds(12, 185, 345, 16);
 		frame.getContentPane().add(label);
 		
 		JLabel label_2 = new JLabel("Нижний левый угол прямоугольной области:");
 		label_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label_2.setBounds(12, 273, 377, 16);
+		label_2.setBounds(12, 273, 345, 16);
 		frame.getContentPane().add(label_2);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(12, 229, 58, 22);
-		frame.getContentPane().add(textField_4);
+		rectUpX = new JTextField();
+		rectUpX.setColumns(10);
+		rectUpX.setBounds(12, 229, 58, 22);
+		frame.getContentPane().add(rectUpX);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(82, 229, 58, 22);
-		frame.getContentPane().add(textField_5);
+		rectUpY = new JTextField();
+		rectUpY.setColumns(10);
+		rectUpY.setBounds(82, 229, 58, 22);
+		frame.getContentPane().add(rectUpY);
 		
 		JLabel label_3 = new JLabel("x");
 		label_3.setBounds(12, 207, 33, 16);
@@ -158,15 +160,15 @@ public class opJavaTask3 {
 		label_4.setBounds(82, 207, 33, 16);
 		frame.getContentPane().add(label_4);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(12, 324, 58, 22);
-		frame.getContentPane().add(textField_6);
+		rectDownX = new JTextField();
+		rectDownX.setColumns(10);
+		rectDownX.setBounds(12, 324, 58, 22);
+		frame.getContentPane().add(rectDownX);
 		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(82, 324, 58, 22);
-		frame.getContentPane().add(textField_7);
+		rectDownY = new JTextField();
+		rectDownY.setColumns(10);
+		rectDownY.setBounds(82, 324, 58, 22);
+		frame.getContentPane().add(rectDownY);
 		
 		JLabel label_5 = new JLabel("x");
 		label_5.setBounds(12, 302, 33, 16);
@@ -180,31 +182,31 @@ public class opJavaTask3 {
 		scrollPane_1.setBounds(369, 188, 279, 158);
 		frame.getContentPane().add(scrollPane_1);
 		
-		JTextArea textArea = new JTextArea();
-		scrollPane_1.setViewportView(textArea);
+		JTextArea rectInfo = new JTextArea();
+		scrollPane_1.setViewportView(rectInfo);
 		
-		JButton button_1 = new JButton("Установить координаты прямоугольной области");
-		button_1.setBounds(12, 359, 636, 37);
-		frame.getContentPane().add(button_1);
+		JButton btnCreateRect = new JButton("Установить координаты прямоугольной области");
+		btnCreateRect.setBounds(12, 359, 636, 37);
+		frame.getContentPane().add(btnCreateRect);
 		
-		JButton button_2 = new JButton("Отобразить отрезки и прямоугольную область");
-		button_2.setBounds(12, 429, 636, 37);
-		frame.getContentPane().add(button_2);
+		JButton btnDrowShapes = new JButton("Отобразить отрезки и прямоугольную область");
+		btnDrowShapes.setBounds(12, 429, 636, 37);
+		frame.getContentPane().add(btnDrowShapes);
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		panel.setBounds(12, 479, 636, 326);
-		frame.getContentPane().add(panel);
+		JPanel panelDrawShapes = new JPanel();
+		panelDrawShapes.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+		panelDrawShapes.setBounds(12, 479, 636, 326);
+		frame.getContentPane().add(panelDrawShapes);
 		
-		JButton button_3 = new JButton("Отобразить координаты отрезков, пересекающих прямоугольную область");
-		button_3.setBounds(12, 828, 636, 37);
-		frame.getContentPane().add(button_3);
+		JButton btnFindIntersection = new JButton("Отобразить координаты отрезков, пересекающих прямоугольную область");
+		btnFindIntersection.setBounds(12, 828, 636, 37);
+		frame.getContentPane().add(btnFindIntersection);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(143, 878, 382, 122);
 		frame.getContentPane().add(scrollPane_2);
 		
-		JTextArea textArea_1 = new JTextArea();
-		scrollPane_2.setViewportView(textArea_1);
+		JTextArea intersectionInfo = new JTextArea();
+		scrollPane_2.setViewportView(intersectionInfo);
 	}
 }
