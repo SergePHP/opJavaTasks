@@ -1,5 +1,6 @@
 package opJava.tasks;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -7,6 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import javax.swing.JTextField;
@@ -16,6 +19,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+
+import opJava.tasks.Test.CustomPaintComponent;
+
 import javax.swing.border.EtchedBorder;
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
@@ -37,6 +43,7 @@ public class opJavaTask3 {
 	private JTextField rectDownY;
 	private Rectangle rectangle;
 	private JTextArea rectInfo;
+	private JPanel panelDrawShapes;
 
 	/**
 	 * Launch the application.
@@ -205,10 +212,15 @@ public class opJavaTask3 {
 		frame.getContentPane().add(btnCreateRect);
 		
 		JButton btnDrowShapes = new JButton("Отобразить отрезки и прямоугольную область");
+		btnDrowShapes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				drawShapes();
+			}
+		});
 		btnDrowShapes.setBounds(12, 429, 636, 37);
 		frame.getContentPane().add(btnDrowShapes);
 		
-		JPanel panelDrawShapes = new JPanel();
+		panelDrawShapes = new JPanel();
 		panelDrawShapes.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panelDrawShapes.setBounds(12, 479, 636, 326);
 		frame.getContentPane().add(panelDrawShapes);
@@ -285,6 +297,33 @@ public class opJavaTask3 {
 			rectInfo.setText("Задан прямоугольник с координатами:\nx1="
 					+ rectangle.x + ", y1=" + rectangle.y + ","
 					+ " x2=" + rectangle.width + ", y2=" + rectangle.height);
+		}
+	}
+
+	private void drawShapes() {
+		
+		CPaintComponent customPaintComponent = new CPaintComponent();
+		panelDrawShapes.add(customPaintComponent);
+	}
+	
+	static class CPaintComponent extends Component {
+			 
+		public void paint(Graphics g) {
+		 
+		 
+		  Graphics2D g2d = (Graphics2D)g;
+		 
+		 
+		  int x = 15;
+		 
+		  int y = 15;
+		 
+		  int w = getSize().width-15;
+		 
+		  int h = getSize().height-15;
+		 
+		 
+		  g2d.drawLine(x, y, w, h);
 		}
 	}
 }
