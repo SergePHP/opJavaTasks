@@ -480,29 +480,8 @@ public class opJavaTask2 {
 	}
 	/*
 	 *  Метод для исправления размера матрицы
-	 *  для операций сложения и вычитания
 	 */
-	private void changeSizeForAddSub(JTable matrix, int x, int y) {
-		
-		DefaultTableModel tableModel = (DefaultTableModel) matrix.getModel();
-		
-		tableModel.setRowCount(0);
-		tableModel.setColumnCount(x);
-		
-		for (int i = 0; i < y; i++) {
-			Vector<Integer> row = new Vector<Integer>();
-			for (int j = 0; j < x; j++) {
-				row.add(0);
-				}
-			tableModel.addRow(row);					
-		}
-		alignTableCells(matrix);
-	}
-	/*
-	 *  Метод для исправления размера
-	 *  матрицы для операции умножения
-	 */
-	private void changeSizeForMult(JTable matrix, int x, int y) {
+	private void changeSize(JTable matrix, int x, int y) {
 		
 		DefaultTableModel tableModel = (DefaultTableModel) matrix.getModel();
 		
@@ -552,13 +531,13 @@ public class opJavaTask2 {
 						 * для операций сложения и вычитания
 						 * для первой матрицы
 						 */
-						changeSizeForAddSub(matrix1, matrix2.getColumnCount(), matrix2.getRowCount());
+						changeSize(matrix1, matrix2.getColumnCount(), matrix2.getRowCount());
 					} else {
 						/*
 						 * Вызываем метод исправления размера матрицы
 						 * для операции умножения для первой матрицы
 						 */
-						changeSizeForMult(matrix1, matrix2.getRowCount(), matrix1.getRowCount());
+						changeSize(matrix1, matrix2.getRowCount(), matrix1.getRowCount());
 					}
 				} else {
 					if (rdAdd.isSelected() || rdSub.isSelected()) {
@@ -567,13 +546,13 @@ public class opJavaTask2 {
 						 * для операций сложения и вычитания
 						 * для второй матрицы
 						 */
-						changeSizeForAddSub(matrix2, matrix1.getColumnCount(), matrix1.getRowCount());
+						changeSize(matrix2, matrix1.getColumnCount(), matrix1.getRowCount());
 					} else {
 						/*
 						 * Вызываем метод исправления размера матрицы
 						 * для операции умножения для второй матрицы
 						 */
-						changeSizeForMult(matrix2, matrix2.getColumnCount(), matrix1.getColumnCount());
+						changeSize(matrix2, matrix2.getColumnCount(), matrix1.getColumnCount());
 					}
 				}
 				dialog.dispose();
