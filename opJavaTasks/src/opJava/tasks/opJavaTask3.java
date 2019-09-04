@@ -14,6 +14,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -259,14 +260,10 @@ public class opJavaTask3 {
 		
 		try {
 			coordinates[0] = Integer.valueOf(x1.getText());
-			if (coordinates[0] > xMax) xMax = coordinates[0];
 			coordinates[1] = Integer.valueOf(y1.getText());
-			if (coordinates[1] > yMax) yMax = coordinates[1];
 			coordinates[2] = Integer.valueOf(x2.getText());
-			if (coordinates[2] > xMax) xMax = coordinates[2];
 			coordinates[3] = Integer.valueOf(y2.getText());
-			if (coordinates[3] > yMax) yMax = coordinates[3];
-			
+	
 			return coordinates;
 			
 		} catch (NumberFormatException e1) {
@@ -274,6 +271,42 @@ public class opJavaTask3 {
 					"Предупреждение", JOptionPane.WARNING_MESSAGE);
 			return null;
 		}
+	}
+	private int[] getBox() {
+		
+		int[] box = new int[2];
+		
+        if(lines.getModel().getRowCount() != 0) {
+	        
+    	DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
+    	
+    	for (int i = 0; i < tableModel.getRowCount(); i++) {
+    		
+    		if(Integer.valueOf(lines.getValueAt(i, 0).toString()) > 
+    			Integer.valueOf(lines.getValueAt(i, 2).toString()) ) {
+    			box[0] = Integer.valueOf(lines.getValueAt(i, 0).toString());
+    		} else {
+    			box[0] = Integer.valueOf(lines.getValueAt(i, 2).toString());
+    		}
+    		
+    		if(Integer.valueOf(lines.getValueAt(i, 1).toString()) > 
+				Integer.valueOf(lines.getValueAt(i, 3).toString()) ) {
+				box[1] = Integer.valueOf(lines.getValueAt(i, 1).toString());
+			} else {
+				box[1] = Integer.valueOf(lines.getValueAt(i, 3).toString());
+			}
+    		
+			}
+        }
+        if(rectangle != null) {
+        	if(rectangle.getWidth() > box[0]) {
+			box[0] = (int)rectangle.getWidth();
+        	}
+	        if (rectangle.getHeight() > box[1]) {
+				box[1] = (int)rectangle.getHeight();
+			}
+        }
+		return box;
 	}
 	/*
 	 * Метод предназначен для добавления отрезка
@@ -322,6 +355,9 @@ public class opJavaTask3 {
 	 */
 	private void drawShapes() {
 		
+		panelDrawShapes.removeAll();
+		panelDrawShapes.validate();
+		
 		if(lines.getModel().getRowCount() == 0 && rectangle == null) {
 			JLabel tempLabel = new JLabel("Нет объектов для отрисовки");
 			tempLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -339,22 +375,63 @@ public class opJavaTask3 {
 		panelDrawShapes.add(customDrawPanel);
 		panelDrawShapes.repaint();
 	}
+	private BufferedImage getScaledImage(BufferedImage src, int w, int h){
+	    
+		int finalw = w;
+	    int finalh = h;
+	    double factor = 1.0d;
+	    if(src.getWidth() > src.getHeight()){
+	        factor = ((double)src.getHeight()/(double)src.getWidth());
+	        finalh = (int)(finalw * factor);                
+	    }else{
+	        factor = ((double)src.getWidth()/(double)src.getHeight());
+	        finalw = (int)(finalh * factor);
+	    }   
+
+	    BufferedImage resizedImg = new BufferedImage(finalw, finalh, BufferedImage.TRANSLUCENT);
+	    Graphics2D g2 = resizedImg.createGraphics();
+	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	    g2.drawImage(src, 0, 0, finalw, finalh, null);
+	    g2.dispose();
+	    return resizedImg;
+	}
+	
 	public class PanelWithShapes extends JPanel {
 
+		
 	    @Override
 	    protected void paintComponent(Graphics g) {
 	        
 	    	super.paintComponent(g); 
 	        Graphics2D g2d = (Graphics2D) g;
 	        
-	        BufferedImage img = new BufferedImage(xMax, yMax, BufferedImage.TYPE_INT_ARGB);
-	        Graphics2D gr = img.createGraphics();
-	        gr.setComposite(AlphaComposite.Clear);
-	        drawPoints(panelDrawShapes.getPenPoints(), g2d, Color.BLACK);
-	        gr.draw(rectangle);
-	        gr.dispose();
+	        int[] box = getBox();
 	        
-	        g.drawImage(img, 0, 0, null);
+	        BufferedImage img = new BufferedImage(box[0]+25, box[1]+25, BufferedImage.TRANSLUCENT);
+	        Graphics2D gr = img.createGraphics();
+	        gr.setColor(new Color(0, 0, 0));
+	        
+	        if(lines.getModel().getRowCount() != 0) {
+	        
+        	DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
+        	
+        	for (int k = 0; k < tableModel.getRowCount(); k++) {
+        		gr.drawLine(Integer.valueOf(lines.getValueAt(k, 0).toString()),
+        					 	Integer.valueOf(lines.getValueAt(k, 1).toString()),
+        							 Integer.valueOf(lines.getValueAt(k, 2).toString()), 
+        									 Integer.valueOf(lines.getValueAt(k, 3).toString()));
+				}
+	        }
+	        if(rectangle != null) {
+		        gr.draw(rectangle);
+	        }
+
+	        gr.dispose();
+
+	        g2d.drawImage(getScaledImage(img, panelDrawShapes.getWidth(),
+	        		panelDrawShapes.getHeight()), 5, 5, null);
+	        
+	        
 	        
 //	        if(lines.getModel().getRowCount() != 0) {
 //		        
