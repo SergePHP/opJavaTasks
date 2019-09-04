@@ -1,6 +1,9 @@
 package opJava.tasks;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -25,6 +28,8 @@ import opJava.tasks.Test.CustomPaintComponent;
 import javax.swing.border.EtchedBorder;
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
@@ -41,9 +46,15 @@ public class opJavaTask3 {
 	private JTextField rectUpY;
 	private JTextField rectDownX;
 	private JTextField rectDownY;
-	private Rectangle rectangle;
+	private Rectangle2D rectangle;
 	private JTextArea rectInfo;
 	private JPanel panelDrawShapes;
+	
+	private double xСoeff = 1;
+	private double yCoeff = 1;
+	
+	private int xMax = 0;
+	private int yMax = 0;
 
 	/**
 	 * Launch the application.
@@ -223,6 +234,7 @@ public class opJavaTask3 {
 		panelDrawShapes = new JPanel();
 		panelDrawShapes.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panelDrawShapes.setBounds(12, 479, 636, 326);
+		panelDrawShapes.setLayout(null);
 		frame.getContentPane().add(panelDrawShapes);
 		
 		JButton btnFindIntersection = new JButton("Отобразить координаты отрезков, пересекающих прямоугольную область");
@@ -247,9 +259,14 @@ public class opJavaTask3 {
 		
 		try {
 			coordinates[0] = Integer.valueOf(x1.getText());
+			if (coordinates[0] > xMax) xMax = coordinates[0];
 			coordinates[1] = Integer.valueOf(y1.getText());
+			if (coordinates[1] > yMax) yMax = coordinates[1];
 			coordinates[2] = Integer.valueOf(x2.getText());
+			if (coordinates[2] > xMax) xMax = coordinates[2];
 			coordinates[3] = Integer.valueOf(y2.getText());
+			if (coordinates[3] > yMax) yMax = coordinates[3];
+			
 			return coordinates;
 			
 		} catch (NumberFormatException e1) {
@@ -291,39 +308,68 @@ public class opJavaTask3 {
 		int[] rectCoord = readCoordinates(rectUpX, rectUpY, 
 				rectDownX, rectDownY);
 		if(rectCoord != null) {
-			rectangle = new Rectangle(rectCoord[0], rectCoord[1],
+			rectangle = new Rectangle2D.Double(rectCoord[0], rectCoord[1],
 					rectCoord[2], rectCoord[3]);
 			rectInfo.setText("");
 			rectInfo.setText("Задан прямоугольник с координатами:\nx1="
-					+ rectangle.x + ", y1=" + rectangle.y + ","
-					+ " x2=" + rectangle.width + ", y2=" + rectangle.height);
+					+ rectangle.getX() + ", y1=" + rectangle.getY() + ","
+					+ " x2=" + rectangle.getWidth() + ", y2=" + rectangle.getHeight());
 		}
 	}
-
+	/*
+	 * Метод для отрисовки отрезков
+	 * и прямоугольника на панели
+	 */
 	private void drawShapes() {
 		
-		CPaintComponent customPaintComponent = new CPaintComponent();
-		panelDrawShapes.add(customPaintComponent);
-	}
-	
-	static class CPaintComponent extends Component {
-			 
-		public void paint(Graphics g) {
-		 
-		 
-		  Graphics2D g2d = (Graphics2D)g;
-		 
-		 
-		  int x = 15;
-		 
-		  int y = 15;
-		 
-		  int w = getSize().width-15;
-		 
-		  int h = getSize().height-15;
-		 
-		 
-		  g2d.drawLine(x, y, w, h);
+		if(lines.getModel().getRowCount() == 0 && rectangle == null) {
+			JLabel tempLabel = new JLabel("Нет объектов для отрисовки");
+			tempLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			tempLabel.setSize(345, 16);
+			tempLabel.setLocation(4, 4);
+			panelDrawShapes.add(tempLabel);
+			panelDrawShapes.repaint();
+			return;
 		}
+		
+		PanelWithShapes customDrawPanel = new PanelWithShapes();
+		customDrawPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+		customDrawPanel.setSize(panelDrawShapes.getSize());
+		customDrawPanel.setLocation(0, 0);
+		panelDrawShapes.add(customDrawPanel);
+		panelDrawShapes.repaint();
+	}
+	public class PanelWithShapes extends JPanel {
+
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        
+	    	super.paintComponent(g); 
+	        Graphics2D g2d = (Graphics2D) g;
+	        
+	        BufferedImage img = new BufferedImage(xMax, yMax, BufferedImage.TYPE_INT_ARGB);
+	        Graphics2D gr = img.createGraphics();
+	        gr.setComposite(AlphaComposite.Clear);
+	        drawPoints(panelDrawShapes.getPenPoints(), g2d, Color.BLACK);
+	        gr.draw(rectangle);
+	        gr.dispose();
+	        
+	        g.drawImage(img, 0, 0, null);
+	        
+//	        if(lines.getModel().getRowCount() != 0) {
+//		        
+//	        	DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
+//	        	
+//	        	for (int k = 0; k < tableModel.getRowCount(); k++) {
+//	        		g2d.drawLine(Integer.valueOf(lines.getValueAt(k, 0).toString()),
+//	        					 	Integer.valueOf(lines.getValueAt(k, 1).toString()),
+//	        							 Integer.valueOf(lines.getValueAt(k, 2).toString()), 
+//	        									 Integer.valueOf(lines.getValueAt(k, 3).toString()));
+//				}
+//	        }
+//	        if(rectangle != null) {
+//		        g2d.draw(rectangle);
+//	        }
+	    }
 	}
 }

@@ -1,21 +1,31 @@
 package opJava.tasks;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
+
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Test {
 
 	private JFrame frame;
+	private JTextField textField;
+	private JPanel panel;
 
 	/**
 	 * Launch the application.
@@ -47,13 +57,42 @@ public class Test {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 579, 570);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
+
+		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+		panel.setBounds(12, 479, 636, 326);
 		panel.setLayout(null);
-		frame.getContentPane().add(panel);
 		
-		CustomPaintComponent customPaintComponent = new CustomPaintComponent();
-		panel.add(customPaintComponent);
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		
+		JButton btnNewButton = new JButton("New button");
+		frame.getContentPane().add(btnNewButton, BorderLayout.NORTH);
+		
+		JButton btnNewButton_1 = new JButton("Draw");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				PanelWithRectangle panelDrawShapes = new PanelWithRectangle();
+				panelDrawShapes.setLocation(0, 0);
+				panelDrawShapes.setSize(new Dimension(500, 500));
+				panel.add(panelDrawShapes);
+				panelDrawShapes.repaint();
+				
+			}
+		});
+		frame.getContentPane().add(btnNewButton_1, BorderLayout.EAST);
+		
+		textField = new JTextField();
+		frame.getContentPane().add(textField, BorderLayout.WEST);
+		textField.setColumns(10);
+		
+		JTextArea textArea = new JTextArea();
+		frame.getContentPane().add(textArea, BorderLayout.SOUTH);
+		
+//		CustomPaintComponent customPaintComponent = new CustomPaintComponent();
+//		panel.add(customPaintComponent);
 		
 		frame.setVisible(true);
 		 
@@ -64,9 +103,25 @@ public class Test {
 		  * and override its paint() method. The paint() method is automatically called 
 		  * by the windowing system whenever component's area needs to be repainted.
 		  */
+	public class PanelWithRectangle extends JPanel {
+
+	    public PanelWithRectangle() {
+	        //setPreferredSize(new Dimension(200,100));
+	    }
+
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g); 
+	        Graphics2D g2d = (Graphics2D) g;
+	        g2d.draw(new Rectangle2D.Double(10, 10, 200, 250));
+	    }
+	}
+	
 		static class CustomPaintComponent extends Component {
 		 
 		public void paint(Graphics g) {
+			
+
 		 
 		  // Retrieve the graphics context; this object is used to paint shapes
 		 
