@@ -407,7 +407,7 @@ public class opJavaTask3 {
 	        
 	        int[] box = getBox();
 	        
-	        BufferedImage img = new BufferedImage(box[0]+25, box[1]+25, BufferedImage.TRANSLUCENT);
+	        BufferedImage img = new BufferedImage(box[0]+10, box[1]+10, BufferedImage.TRANSLUCENT);
 	        Graphics2D gr = img.createGraphics();
 	        gr.setColor(new Color(0, 0, 0));
 	        
@@ -429,7 +429,7 @@ public class opJavaTask3 {
 	        gr.dispose();
 
 	        g2d.drawImage(getScaledImage(img, panelDrawShapes.getWidth(),
-	        		panelDrawShapes.getHeight()), 5, 5, null);
+	        		panelDrawShapes.getHeight()), 2, 2, null);
 	        
 	        
 	        
