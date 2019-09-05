@@ -31,7 +31,12 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 
@@ -272,41 +277,44 @@ public class opJavaTask3 {
 			return null;
 		}
 	}
-	private int[] getBox() {
+	private int[] getMaxImageSize() {
 		
-		int[] box = new int[2];
+		int[] imageSize = new int[2];
+		
+		Queue<Integer> xCoordinates = new PriorityQueue<>(new Comparator<Integer>() {
+			
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2.compareTo(o1);
+            }
+        });
+		
+		Queue<Integer> yCoordinates = new PriorityQueue<>(new Comparator<Integer>() {
+			
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2.compareTo(o1);
+            }
+        });
 		
         if(lines.getModel().getRowCount() != 0) {
 	        
     	DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
     	
     	for (int i = 0; i < tableModel.getRowCount(); i++) {
-    		
-    		if(Integer.valueOf(lines.getValueAt(i, 0).toString()) > 
-    			Integer.valueOf(lines.getValueAt(i, 2).toString()) ) {
-    			box[0] = Integer.valueOf(lines.getValueAt(i, 0).toString());
-    		} else {
-    			box[0] = Integer.valueOf(lines.getValueAt(i, 2).toString());
-    		}
-    		
-    		if(Integer.valueOf(lines.getValueAt(i, 1).toString()) > 
-				Integer.valueOf(lines.getValueAt(i, 3).toString()) ) {
-				box[1] = Integer.valueOf(lines.getValueAt(i, 1).toString());
-			} else {
-				box[1] = Integer.valueOf(lines.getValueAt(i, 3).toString());
-			}
-    		
+    		xCoordinates.add(Integer.valueOf(lines.getValueAt(i, 0).toString()));
+    		xCoordinates.add(Integer.valueOf(lines.getValueAt(i, 2).toString()));
+    		yCoordinates.add(Integer.valueOf(lines.getValueAt(i, 1).toString()));
+    		yCoordinates.add(Integer.valueOf(lines.getValueAt(i, 3).toString()));
 			}
         }
         if(rectangle != null) {
-        	if(rectangle.getWidth() > box[0]) {
-			box[0] = (int)rectangle.getWidth();
-        	}
-	        if (rectangle.getHeight() > box[1]) {
-				box[1] = (int)rectangle.getHeight();
-			}
+        	xCoordinates.add((int)rectangle.getWidth() + (int)rectangle.getX());
+    		yCoordinates.add((int)rectangle.getHeight() + (int)rectangle.getY());
         }
-		return box;
+        imageSize[0] = xCoordinates.poll();
+        imageSize[1] = yCoordinates.poll();
+		return imageSize;
 	}
 	/*
 	 * Метод предназначен для добавления отрезка
@@ -342,11 +350,11 @@ public class opJavaTask3 {
 				rectDownX, rectDownY);
 		if(rectCoord != null) {
 			rectangle = new Rectangle2D.Double(rectCoord[0], rectCoord[1],
-					rectCoord[2], rectCoord[3]);
+					rectCoord[2] - rectCoord[0], rectCoord[3] - rectCoord[1]);
 			rectInfo.setText("");
-			rectInfo.setText("Задан прямоугольник с координатами:\nx1="
-					+ rectangle.getX() + ", y1=" + rectangle.getY() + ","
-					+ " x2=" + rectangle.getWidth() + ", y2=" + rectangle.getHeight());
+			rectInfo.setText("Задан прямоугольник с координатами:\nX="
+					+ rectangle.getX() + "\nY=" + rectangle.getY()
+					+ "\nШирина=" + rectangle.getWidth() + "\nВысота=" + rectangle.getHeight());
 		}
 	}
 	/*
@@ -380,11 +388,20 @@ public class opJavaTask3 {
 		int finalw = w;
 	    int finalh = h;
 	    double factor = 1.0d;
+    
 	    if(src.getWidth() > src.getHeight()){
-	        factor = ((double)src.getHeight()/(double)src.getWidth());
+	        factor = ((double)src.getHeight() / (double)src.getWidth());
+
+	        if ((finalw * factor) > finalh) {
+	        	factor = finalh / (double)(finalw * factor);
+	        	finalh = (int)(finalh * factor);
+	        	finalw = (int)(finalw * factor);
+	        }
+	        
 	        finalh = (int)(finalw * factor);                
 	    }else{
-	        factor = ((double)src.getWidth()/(double)src.getHeight());
+	        factor = ((double)src.getWidth() / (double)src.getHeight());
+
 	        finalw = (int)(finalh * factor);
 	    }   
 
@@ -405,9 +422,10 @@ public class opJavaTask3 {
 	    	super.paintComponent(g); 
 	        Graphics2D g2d = (Graphics2D) g;
 	        
-	        int[] box = getBox();
+	        int[] maxImageSize = getMaxImageSize();
 	        
-	        BufferedImage img = new BufferedImage(box[0]+10, box[1]+10, BufferedImage.TRANSLUCENT);
+	        BufferedImage img = new BufferedImage(maxImageSize[0]+10,
+	        		maxImageSize[1]+10, BufferedImage.TRANSLUCENT); //TRANSLUCENT
 	        Graphics2D gr = img.createGraphics();
 	        gr.setColor(new Color(0, 0, 0));
 	        
@@ -427,26 +445,14 @@ public class opJavaTask3 {
 	        }
 
 	        gr.dispose();
-
-	        g2d.drawImage(getScaledImage(img, panelDrawShapes.getWidth(),
-	        		panelDrawShapes.getHeight()), 2, 2, null);
 	        
-	        
-	        
-//	        if(lines.getModel().getRowCount() != 0) {
-//		        
-//	        	DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
-//	        	
-//	        	for (int k = 0; k < tableModel.getRowCount(); k++) {
-//	        		g2d.drawLine(Integer.valueOf(lines.getValueAt(k, 0).toString()),
-//	        					 	Integer.valueOf(lines.getValueAt(k, 1).toString()),
-//	        							 Integer.valueOf(lines.getValueAt(k, 2).toString()), 
-//	        									 Integer.valueOf(lines.getValueAt(k, 3).toString()));
-//				}
-//	        }
-//	        if(rectangle != null) {
-//		        g2d.draw(rectangle);
-//	        }
+	        if(panelDrawShapes.getWidth() >= img.getWidth() 
+	        		&& panelDrawShapes.getHeight() >= img.getHeight()) {
+		        g2d.drawImage(img, 2, 2, null);
+	        } else {
+		        g2d.drawImage(getScaledImage(img, panelDrawShapes.getWidth(),
+		        		panelDrawShapes.getHeight()), 2, 2, null);
+	        }
 	    }
 	}
 }
