@@ -1,21 +1,14 @@
 package opJava.tasks;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
-
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -23,18 +16,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-
-import opJava.tasks.Test.CustomPaintComponent;
-
 import javax.swing.border.EtchedBorder;
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Vector;
@@ -244,6 +231,11 @@ public class opJavaTask3 {
 		frame.getContentPane().add(panelDrawShapes);
 		
 		JButton btnFindIntersection = new JButton("Отобразить координаты отрезков, пересекающих прямоугольную область");
+		btnFindIntersection.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				isIntersect(20, 20, 140, 120);
+			}
+		});
 		btnFindIntersection.setBounds(12, 828, 636, 37);
 		frame.getContentPane().add(btnFindIntersection);
 		
@@ -253,6 +245,56 @@ public class opJavaTask3 {
 		
 		JTextArea intersectionInfo = new JTextArea();
 		scrollPane_2.setViewportView(intersectionInfo);
+	}
+	private boolean isIntersect(int x1, int y1, int x2, int y2) {
+		
+		int x3 = (int)rectangle.getMinX();
+		int y3 = (int)rectangle.getMinY();
+		int x4 = (int)rectangle.getMaxX();
+		int y4 = (int)rectangle.getMinY();
+		
+		double k1 = 0;
+		double k2 = 0;
+		
+		double b1 = 0;
+		double b2 = 0;
+		
+		if(x1 >= x2) {
+			int temp = x1;
+			x1 = x2;
+			x2 = temp;
+			temp = y1;
+			y1 = y2;
+			y2 = temp;
+		}
+		if(x3 >= x4) {
+			int temp = x3;
+			x3 = x4;
+			x4 = temp;
+			temp = y3;
+			y3 = y4;
+			y4 = temp;
+		}
+		if (y1 != y2) {
+			k1 = (x2-x1)/(y2-y1);	
+		}
+		if (y3 != y4) {
+			k2 = (x4-x3)/(y4-y3);	
+		}
+
+		if (k1 == k2) return false;
+		
+		b1 = y1 - k1 * x1; 
+		b2 = y3 - k2 * x3;
+		
+		double x = (b2 - b1) / (k1 - k2);
+		double y = k1*x + b1;
+		
+		if ((x1 <= x && x2 >= x && x3 <= x && x4 >=x) 
+				|| (y1 <= y && y2 >= y && y3 <= y && y4 >= y)) {
+			return true;
+		}
+		return false;
 	}
 	/*
 	 * Метод читает введенные значения координат
@@ -320,8 +362,15 @@ public class opJavaTask3 {
 	 * Метод предназначен для добавления отрезка
 	 */
 	private void addLine() {
+		/*
+		 * Получаю координаты отрезка
+		 */
 		int[] lineCoord = readCoordinates(lineStartX, lineStartY, 
 				lineEndX, lineEndY);
+		/*
+		 * Если отрезок задан, добавляю 
+		 * строку с координатами в таблицу 
+		 */
 		if(lineCoord != null) {
 			DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
 			Vector<String> row = new Vector<>();
@@ -337,7 +386,13 @@ public class opJavaTask3 {
 	private void deleteLine() {
 		
 		DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
+		/*
+		 * Получаю индекс выбранной строки
+		 */
 		int row = lines.getSelectedRow();
+		/*
+		 * Если строка выбрана, удаляю
+		 */
 		if (row != -1) {
 			tableModel.removeRow(row);	
 		}
@@ -346,11 +401,21 @@ public class opJavaTask3 {
 	 * Метод создает прямоугольник
 	 */
 	private void createRect(){
+		/*
+		 * Получаю абсолютные координаты прямоугольника
+		 */
 		int[] rectCoord = readCoordinates(rectUpX, rectUpY, 
 				rectDownX, rectDownY);
 		if(rectCoord != null) {
+			/*
+			 * Если координаты заданы, создаю прямоугольник
+			 * используя Rectangle2D класс
+			 */
 			rectangle = new Rectangle2D.Double(rectCoord[0], rectCoord[1],
 					rectCoord[2] - rectCoord[0], rectCoord[3] - rectCoord[1]);
+			/*
+			 * Вывожу информацию о фигуре в текстовую область
+			 */
 			rectInfo.setText("");
 			rectInfo.setText("Задан прямоугольник с координатами:\nX="
 					+ rectangle.getX() + "\nY=" + rectangle.getY()
@@ -358,14 +423,22 @@ public class opJavaTask3 {
 		}
 	}
 	/*
-	 * Метод для отрисовки отрезков
+	 * Метод для вывода отрезков
 	 * и прямоугольника на панели
 	 */
 	private void drawShapes() {
 		
+		/*
+		 * Удаляю все компоненты из контейнера
+		 * и валидирую контейнер
+		 */
 		panelDrawShapes.removeAll();
 		panelDrawShapes.validate();
 		
+		/*
+		 * Если нет элементов для отображения,
+		 * то отображаю сообщение в область вывода
+		 */
 		if(lines.getModel().getRowCount() == 0 && rectangle == null) {
 			JLabel tempLabel = new JLabel("Нет объектов для отрисовки");
 			tempLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -375,7 +448,12 @@ public class opJavaTask3 {
 			panelDrawShapes.repaint();
 			return;
 		}
-		
+		/*
+		 * Для отображения элементов создаю экземпляр
+		 * пользовательской панели, в котором выполняются
+		 * все необходимые процедуры по подготовке и выводу
+		 * изображения и размещаю его на панель 
+		 */
 		PanelWithShapes customDrawPanel = new PanelWithShapes();
 		customDrawPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		customDrawPanel.setSize(panelDrawShapes.getSize());
@@ -383,28 +461,34 @@ public class opJavaTask3 {
 		panelDrawShapes.add(customDrawPanel);
 		panelDrawShapes.repaint();
 	}
+	/*
+	 * Метод для получения масштабированного изображения
+	 */
 	private BufferedImage getScaledImage(BufferedImage src, int w, int h){
 	    
 		int finalw = w;
 	    int finalh = h;
-	    double factor = 1.0d;
+	    double factorW = 1.0d;
+	    double factorH = 1.0d;
     
-	    if(src.getWidth() > src.getHeight()){
-	        factor = ((double)src.getHeight() / (double)src.getWidth());
-
-	        if ((finalw * factor) > finalh) {
-	        	factor = finalh / (double)(finalw * factor);
-	        	finalh = (int)(finalh * factor);
-	        	finalw = (int)(finalw * factor);
-	        }
-	        
-	        finalh = (int)(finalw * factor);                
-	    }else{
-	        factor = ((double)src.getWidth() / (double)src.getHeight());
-
-	        finalw = (int)(finalh * factor);
-	    }   
-
+	    /*
+	     * Получаю коэффициенты для масштабирования
+	     * по двум осям и применяю больший 
+	     * (меньшее значение) 
+	     */
+	    factorW = (w / (double)src.getWidth());
+	    factorH = (h / (double)src.getHeight());
+	    
+	    if(factorW < factorH) {
+        	finalw = (int)(src.getWidth() * factorW);
+        	finalh = (int)(src.getHeight() * factorW);
+	    } else {
+        	finalw = (int)(src.getWidth() * factorH);
+        	finalh = (int)(src.getHeight() * factorH);
+	    }
+	    /*
+	     * Создаю и возвращаю масштабированное изображение
+	     */
 	    BufferedImage resizedImg = new BufferedImage(finalw, finalh, BufferedImage.TRANSLUCENT);
 	    Graphics2D g2 = resizedImg.createGraphics();
 	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -412,47 +496,80 @@ public class opJavaTask3 {
 	    g2.dispose();
 	    return resizedImg;
 	}
-	
+	/*
+	 * Создаю пользовательский объект, расширяющий JPanel
+	 * в которой переопределяю метод, ответственный
+	 * за отображение элемента, в котором реализован
+	 * вывод всех элементов, заданных пользователем
+	 * 
+	 * Абсолютный ноль всех элементов находится в 
+	 * левом верхнем углу области вывода
+	 */
 	public class PanelWithShapes extends JPanel {
 
-		
 	    @Override
 	    protected void paintComponent(Graphics g) {
 	        
-	    	super.paintComponent(g); 
+	    	super.paintComponent(g);
+	    	
+	    	/*
+	    	 * Для вывода геометрических фигур
+	    	 * использую класс Graphics2D
+	    	 */
 	        Graphics2D g2d = (Graphics2D) g;
 	        
+	        /*
+	         * Определяю максимальные размеры изображения
+	         */
 	        int[] maxImageSize = getMaxImageSize();
 	        
-	        BufferedImage img = new BufferedImage(maxImageSize[0]+10,
-	        		maxImageSize[1]+10, BufferedImage.TRANSLUCENT); //TRANSLUCENT
+	        /*
+	         *  Создаю новое изображение используя
+	         *  максимальные размеры изображения и
+	         *  запас 10 пикс. по двум осям
+	         */
+	        BufferedImage img = new BufferedImage(maxImageSize[0]+10, maxImageSize[1]+10, BufferedImage.TRANSLUCENT);
 	        Graphics2D gr = img.createGraphics();
 	        gr.setColor(new Color(0, 0, 0));
 	        
+	        /*
+	         * Если есть отрезки, то вывожу
+	         * в цикле все заданные отрезки
+	         */
 	        if(lines.getModel().getRowCount() != 0) {
 	        
         	DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
         	
         	for (int k = 0; k < tableModel.getRowCount(); k++) {
         		gr.drawLine(Integer.valueOf(lines.getValueAt(k, 0).toString()),
-        					 	Integer.valueOf(lines.getValueAt(k, 1).toString()),
-        							 Integer.valueOf(lines.getValueAt(k, 2).toString()), 
-        									 Integer.valueOf(lines.getValueAt(k, 3).toString()));
+        				Integer.valueOf(lines.getValueAt(k, 1).toString()),
+        						Integer.valueOf(lines.getValueAt(k, 2).toString()), 
+        							 Integer.valueOf(lines.getValueAt(k, 3).toString()));
 				}
 	        }
+	        /*
+	         * Если есть прямоугольник, 
+	         * то вывожу прямоугольник
+	         */
 	        if(rectangle != null) {
 		        gr.draw(rectangle);
 	        }
 
 	        gr.dispose();
-	        
+
+	        /*
+	         * Вывожу изображение.
+	         * Если изображение больше, чем размер панели,
+	         * то предварительно изображение масштабируется
+	         */
 	        if(panelDrawShapes.getWidth() >= img.getWidth() 
 	        		&& panelDrawShapes.getHeight() >= img.getHeight()) {
 		        g2d.drawImage(img, 2, 2, null);
 	        } else {
-		        g2d.drawImage(getScaledImage(img, panelDrawShapes.getWidth(),
-		        		panelDrawShapes.getHeight()), 2, 2, null);
+	        	BufferedImage resizedImage = getScaledImage(img, panelDrawShapes.getWidth(),
+		        		panelDrawShapes.getHeight());
+		        g2d.drawImage(resizedImage, 2, 2, null);
 	        }
 	    }
-	}
-}
+	} // end of PanelWithShapes class
+} // end of opJavaTask3 class
