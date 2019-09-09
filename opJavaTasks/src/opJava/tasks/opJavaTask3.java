@@ -246,21 +246,21 @@ public class opJavaTask3 {
 		JTextArea intersectionInfo = new JTextArea();
 		scrollPane_2.setViewportView(intersectionInfo);
 	}
-	private boolean isIntersect(int x1, int y1, int x2, int y2) {
+	private boolean isIntersect(double x1, double y1, double x2, double y2) {
 		
-		int x3 = (int)rectangle.getMinX();
-		int y3 = (int)rectangle.getMinY();
-		int x4 = (int)rectangle.getMaxX();
-		int y4 = (int)rectangle.getMinY();
+		double x3 = rectangle.getMinX();
+		double y3 = rectangle.getMinY();
+		double x4 = rectangle.getMaxX();
+		double y4 = rectangle.getMinY();
 		
-		double k1 = 0;
-		double k2 = 0;
+		double k1 = 0.0;
+		double k2 = 0.0;
 		
-		double b1 = 0;
-		double b2 = 0;
+		double b1 = 0.0;
+		double b2 = 0.0;
 		
 		if(x1 >= x2) {
-			int temp = x1;
+			double temp = x1;
 			x1 = x2;
 			x2 = temp;
 			temp = y1;
@@ -268,7 +268,7 @@ public class opJavaTask3 {
 			y2 = temp;
 		}
 		if(x3 >= x4) {
-			int temp = x3;
+			double temp = x3;
 			x3 = x4;
 			x4 = temp;
 			temp = y3;
@@ -276,10 +276,10 @@ public class opJavaTask3 {
 			y4 = temp;
 		}
 		if (y1 != y2) {
-			k1 = (x2-x1)/(y2-y1);	
+			k1 = (y2 - y1) / (x2 - x1);	
 		}
 		if (y3 != y4) {
-			k2 = (x4-x3)/(y4-y3);	
+			k2 = (y4 - y3) / (x4 - x3);
 		}
 
 		if (k1 == k2) return false;
@@ -290,8 +290,8 @@ public class opJavaTask3 {
 		double x = (b2 - b1) / (k1 - k2);
 		double y = k1*x + b1;
 		
-		if ((x1 <= x && x2 >= x && x3 <= x && x4 >=x) 
-				|| (y1 <= y && y2 >= y && y3 <= y && y4 >= y)) {
+		if (((x1 <= x) && (x2 >= x) && (x3 <= x) && (x4 >= x)) 
+				|| ((y1 <= y) && (y2 >= y) && (y3 <= y) && (y4 >= y))) {
 			return true;
 		}
 		return false;
