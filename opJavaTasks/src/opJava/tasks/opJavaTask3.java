@@ -49,6 +49,8 @@ public class opJavaTask3 {
 	private int xMax = 0;
 	private int yMax = 0;
 
+	final static double EPSILON = 0.0000001;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -233,7 +235,7 @@ public class opJavaTask3 {
 		JButton btnFindIntersection = new JButton("Отобразить координаты отрезков, пересекающих прямоугольную область");
 		btnFindIntersection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				isIntersect(20, 20, 140, 120);
+				getIntersections();
 			}
 		});
 		btnFindIntersection.setBounds(12, 828, 636, 37);
@@ -246,12 +248,45 @@ public class opJavaTask3 {
 		JTextArea intersectionInfo = new JTextArea();
 		scrollPane_2.setViewportView(intersectionInfo);
 	}
-	private boolean isIntersect(double x1, double y1, double x2, double y2) {
+	private void getIntersections() {
 		
-		double x3 = rectangle.getMinX();
-		double y3 = rectangle.getMinY();
-		double x4 = rectangle.getMaxX();
-		double y4 = rectangle.getMinY();
+		double[] line1 = new double[4];
+		double[] line2 = new double[4];
+		
+		line1[0] = 20;
+		line1[1] = 20;
+		line1[2] = 100;
+		line1[3] = 120;
+				
+		line2[0] = 150;
+		line2[1] = 20;
+		line2[2] = 50;
+		line2[3] = 57.5;
+
+		
+		isIntersect(line1, line2);
+	}
+	private boolean isIntersect(double[] c1, double[] c2) {
+		
+//		double x0 = rectangle.getMinX();
+//		double y0 = rectangle.getMinY();
+//		double x1 = rectangle.getMaxX();
+//		double y1 = rectangle.getMinY();
+
+		/*
+		 * Координаты первой прямой (C1)
+		 */
+		double x0 = c1[0];
+		double y0 = c1[1];
+		double x1 = c1[2];
+		double y1 = c1[3];
+		/*
+		 * Координаты второй прямой (C2)
+		 */
+		double x2 = c2[0];
+		double y2 = c2[1];
+		double x3 = c2[2];
+		double y3 = c2[3];
 		
 		double k1 = 0.0;
 		double k2 = 0.0;
@@ -259,42 +294,94 @@ public class opJavaTask3 {
 		double b1 = 0.0;
 		double b2 = 0.0;
 		
-		if(x1 >= x2) {
-			double temp = x1;
-			x1 = x2;
-			x2 = temp;
-			temp = y1;
-			y1 = y2;
-			y2 = temp;
+//		if(x0 >= x1) {
+//			double temp = x0;
+//			x0 = x1;
+//			x1 = temp;
+//			temp = y0;
+//			y0 = y1;
+//			y1 = temp;
+//		}
+//		if(x2 >= x3) {
+//			double temp = x2;
+//			x2 = x3;
+//			x3 = temp;
+//			temp = y2;
+//			y2 = y3;
+//			y3 = temp;
+//		}
+		
+		if (y0 != y1) {
+			k1 = (y1 - y0) / (x1 - x0);	
 		}
-		if(x3 >= x4) {
-			double temp = x3;
-			x3 = x4;
-			x4 = temp;
-			temp = y3;
-			y3 = y4;
-			y4 = temp;
-		}
-		if (y1 != y2) {
-			k1 = (y2 - y1) / (x2 - x1);	
-		}
-		if (y3 != y4) {
-			k2 = (y4 - y3) / (x4 - x3);
+		if (y2 != y3) {
+			k2 = (y3 - y2) / (x3 - x2);
 		}
 
+		/*
+		 * Если коэффициенты равны, 
+		 * то прямые параллельны
+		 */
 		if (k1 == k2) return false;
 		
-		b1 = y1 - k1 * x1; 
-		b2 = y3 - k2 * x3;
-		
+		b1 = y0 - k1 * x0; 
+		b2 = y2 - k2 * x2;
+
+		/*
+		 * Точка пересечения двух отрезков (M)
+		 */
 		double x = (b2 - b1) / (k1 - k2);
 		double y = k1*x + b1;
-		
-		if (((x1 <= x) && (x2 >= x) && (x3 <= x) && (x4 >= x)) 
-				|| ((y1 <= y) && (y2 >= y) && (y3 <= y) && (y4 >= y))) {
-			return true;
-		}
+		/*
+		 * Определяю в пределах погрешности, что точка пересечения лежит на прямых.
+		 * Для этого получаю векторное произведение векторов, заданных:
+		 * 1. начальными и конечными точками отрезка
+		 * 2. начальной точкой отрезка и точкой пересечения;
+		 * Если произведение = 0, то точка лежит на прямой.  
+		 */
+//		if(equals(((x - x0)*(y1 - y0) - (y - y0)*(x1 - x0)), 0, EPSILON)  
+//				&& equals(((x - x2)*(y3 - y2) - (y - y2)*(x3 - x2)), 0, EPSILON)) {
+			/*
+			 * Т.к. точка пересечения лежит на двух прямых
+			 * Определяю, принадлежит ли точка отрезку.
+			 * Для этого получаю угол между векторами, заданными:
+			 * 1. точкой пересечения и начальной точкой отрезка (вектор a);
+			 * 2. точкой пересечения и конечной точкой отрезка (вектор b);
+			 * 
+			 * cos(a,b) = (a; b) / |a||b| - т.е. отношение скалярного произведения
+			 * векторов к произведению длин векторов
+			 */
+
+			double scMultC1 = (x0 - x)*(x1 - x) + (y0 - y)*(y1 - y);
+			double lenVectC1 = Math.sqrt(Math.pow((x0 - x), 2) + Math.pow((y0 - y), 2))
+								* Math.sqrt(Math.pow((x1 - x), 2) + Math.pow((y1 - y), 2));
+
+			double scMultC2 = (x2 - x)*(x3 - x) + (y2 - y)*(y3 - y);
+			double lenVectC2 = Math.sqrt(Math.pow((x2 - x), 2) + Math.pow((y2 - y), 2))
+								* Math.sqrt(Math.pow((x3 - x), 2) + Math.pow((y3 - y), 2));
+			
+			double angleC1 = scMultC1 / lenVectC1; 
+			double angleC2 = scMultC2 / lenVectC2;
+			/* 
+			 * Если cos(a,b) = -1, то точка лежит между двумя концами отрезка.
+			 * погрешность 1.0E-7
+			 */
+			if(equals(angleC1, -1, EPSILON) && equals(angleC2, -1, EPSILON)) 
+				return true; 
+
+			if(Double.isNaN(angleC1) || Double.isNaN(angleC2))
+			
+			
+//		}
 		return false;
+	}
+	/*
+	 *  Метод выполняет сравнение переменных
+	 *  в пределах погрешности 1.0E-7
+	 */
+	public static boolean equals(double a, double b, double eps) {
+		    if (a == b) return true;
+		    return Math.abs(a - b) < eps;
 	}
 	/*
 	 * Метод читает введенные значения координат
