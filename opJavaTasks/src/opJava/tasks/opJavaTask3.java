@@ -50,6 +50,7 @@ public class opJavaTask3 {
 	private int yMax = 0;
 
 	final static double EPSILON = 0.0000001;
+	private JTextArea intersectionInfo;
 	
 	/**
 	 * Launch the application.
@@ -245,34 +246,90 @@ public class opJavaTask3 {
 		scrollPane_2.setBounds(143, 878, 382, 122);
 		frame.getContentPane().add(scrollPane_2);
 		
-		JTextArea intersectionInfo = new JTextArea();
+		intersectionInfo = new JTextArea();
 		scrollPane_2.setViewportView(intersectionInfo);
+	}
+	private double[][] getRectSides(){
+		
+		double[][] rectSides = new double[4][4];
+		
+		rectSides[0][0] = rectangle.getX();
+		rectSides[0][1] = rectangle.getY();
+		rectSides[0][2] = rectangle.getMaxX();
+		rectSides[0][3] = rectangle.getY();
+		
+		rectSides[1][0] = rectangle.getMaxX();
+		rectSides[1][1] = rectangle.getY();
+		rectSides[1][2] = rectangle.getMaxX();
+		rectSides[1][3] = rectangle.getMaxY();
+
+		rectSides[2][0] = rectangle.getMaxX();
+		rectSides[2][1] = rectangle.getMaxY();
+		rectSides[2][2] = rectangle.getX();
+		rectSides[2][3] = rectangle.getMaxY();
+		
+		rectSides[3][0] = rectangle.getX();
+		rectSides[3][1] = rectangle.getMaxY();
+		rectSides[3][2] = rectangle.getX();
+		rectSides[3][3] = rectangle.getY();
+
+		return rectSides;
 	}
 	private void getIntersections() {
 		
-		double[] line1 = new double[4];
-		double[] line2 = new double[4];
+		double[] line = new double[4];
+		double[] rectSide = new double[4];
 		
-		line1[0] = 20;
-		line1[1] = 20;
-		line1[2] = 100;
-		line1[3] = 120;
-				
-		line2[0] = 150;
-		line2[1] = 20;
-		line2[2] = 50;
-		line2[3] = 57.5;
+		line[0] = 60;
+		line[1] = 80;
+		line[2] = 250;
+		line[3] = 190;
+		
+		rectSide[0] = 155;
+		rectSide[1] = 20;
+		rectSide[2] = 150;
+		rectSide[3] = 150;
+		
+		isIntersect(line, rectSide);
+		
+		
+		if(lines.getModel().getRowCount() == 0 || rectangle == null) {
+			intersectionInfo.setText("Нет объектов для поиска пересечений");
+	    	return;
+		}
+		
+		intersectionInfo.setText("Следующие отрезки пересекают прямоугольную область:\n");
+		
+		DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
+		
+//		double[] line = new double[4];
+//		double[] rectSide = new double[4];
+		double[][] allRectSides = getRectSides();
 
-		
-		isIntersect(line1, line2);
+		for (int i = 0; i < tableModel.getRowCount(); i++) {
+
+			line[0] = Double.valueOf(lines.getValueAt(i, 0).toString());
+			line[1] = Double.valueOf(lines.getValueAt(i, 1).toString());
+			line[2] = Double.valueOf(lines.getValueAt(i, 2).toString());
+			line[3] = Double.valueOf(lines.getValueAt(i, 3).toString());
+			
+			for (int j = 0; j < allRectSides.length; j++) {
+				rectSide[0] = allRectSides[j][0];
+				rectSide[1] = allRectSides[j][1];
+				rectSide[2] = allRectSides[j][2];
+				rectSide[3] = allRectSides[j][3];
+
+				if (isIntersect(line, rectSide)) {
+					intersectionInfo.append("{x1=" + (int)line[0] + ", y1=" + (int)line[1]
+							+ "; x2=" + (int)line[2] + ", y2=" + (int)line[3] + "}\n");
+					break;
+				}
+			}
+		}
 	}
 	private boolean isIntersect(double[] c1, double[] c2) {
-		
-//		double x0 = rectangle.getMinX();
-//		double y0 = rectangle.getMinY();
-//		double x1 = rectangle.getMaxX();
-//		double y1 = rectangle.getMinY();
 
+		
 		/*
 		 * Координаты первой прямой (C1)
 		 */
@@ -319,8 +376,10 @@ public class opJavaTask3 {
 		}
 
 		/*
-		 * Если коэффициенты равны, 
-		 * то прямые параллельны
+		 * Если коэффициенты равны, то прямые параллельны или совпадают,
+		 * соответственно точки пересечения нет или их бесконечное множество.
+		 * Второй случай считается частным и я расцениваю его как отсутствие
+		 * пересечения. 
 		 */
 		if (k1 == k2) return false;
 		
@@ -332,47 +391,57 @@ public class opJavaTask3 {
 		 */
 		double x = (b2 - b1) / (k1 - k2);
 		double y = k1*x + b1;
+//----------------------------------------------------------------------------------
 		/*
 		 * Определяю в пределах погрешности, что точка пересечения лежит на прямых.
 		 * Для этого получаю векторное произведение векторов, заданных:
 		 * 1. начальными и конечными точками отрезка
 		 * 2. начальной точкой отрезка и точкой пересечения;
-		 * Если произведение = 0, то точка лежит на прямой.  
+		 * Если произведение = 0, то точка лежит на прямой.
+		 *		if(equals(((x - x0)*(y1 - y0) - (y - y0)*(x1 - x0)), 0, EPSILON)  
+		 *		&& equals(((x - x2)*(y3 - y2) - (y - y2)*(x3 - x2)), 0, EPSILON)) {
+		 *	}  
 		 */
-//		if(equals(((x - x0)*(y1 - y0) - (y - y0)*(x1 - x0)), 0, EPSILON)  
-//				&& equals(((x - x2)*(y3 - y2) - (y - y2)*(x3 - x2)), 0, EPSILON)) {
-			/*
-			 * Т.к. точка пересечения лежит на двух прямых
-			 * Определяю, принадлежит ли точка отрезку.
-			 * Для этого получаю угол между векторами, заданными:
-			 * 1. точкой пересечения и начальной точкой отрезка (вектор a);
-			 * 2. точкой пересечения и конечной точкой отрезка (вектор b);
-			 * 
-			 * cos(a,b) = (a; b) / |a||b| - т.е. отношение скалярного произведения
-			 * векторов к произведению длин векторов
-			 */
+//----------------------------------------------------------------------------------
+		/*
+		 * Т.к. точка пересечения лежит на двух прямых,
+		 * определяю, принадлежит ли точка отрезку.
+		 * Для этого получаю угол между векторами, которые задаются:
+		 * 1. точкой пересечения и начальной точкой отрезка (вектор a);
+		 * 2. точкой пересечения и конечной точкой отрезка (вектор b);
+		 * 
+		 * cos(a,b) = (a*b) / |a|*|b| - т.е. отношение скалярного произведения
+		 * векторов к произведению длин векторов
+		 */
 
-			double scMultC1 = (x0 - x)*(x1 - x) + (y0 - y)*(y1 - y);
-			double lenVectC1 = Math.sqrt(Math.pow((x0 - x), 2) + Math.pow((y0 - y), 2))
-								* Math.sqrt(Math.pow((x1 - x), 2) + Math.pow((y1 - y), 2));
+		double scMultC1 = (x0 - x)*(x1 - x) + (y0 - y)*(y1 - y);
+		double lenVectC1 = Math.sqrt(Math.pow((x0 - x), 2) + Math.pow((y0 - y), 2))
+							* Math.sqrt(Math.pow((x1 - x), 2) + Math.pow((y1 - y), 2));
 
-			double scMultC2 = (x2 - x)*(x3 - x) + (y2 - y)*(y3 - y);
-			double lenVectC2 = Math.sqrt(Math.pow((x2 - x), 2) + Math.pow((y2 - y), 2))
-								* Math.sqrt(Math.pow((x3 - x), 2) + Math.pow((y3 - y), 2));
-			
-			double angleC1 = scMultC1 / lenVectC1; 
-			double angleC2 = scMultC2 / lenVectC2;
-			/* 
-			 * Если cos(a,b) = -1, то точка лежит между двумя концами отрезка.
-			 * погрешность 1.0E-7
-			 */
-			if(equals(angleC1, -1, EPSILON) && equals(angleC2, -1, EPSILON)) 
-				return true; 
+		double scMultC2 = (x2 - x)*(x3 - x) + (y2 - y)*(y3 - y);
+		double lenVectC2 = Math.sqrt(Math.pow((x2 - x), 2) + Math.pow((y2 - y), 2))
+							* Math.sqrt(Math.pow((x3 - x), 2) + Math.pow((y3 - y), 2));
+		
+		double angleC1 = scMultC1 / lenVectC1;
+		double angleC2 = scMultC2 / lenVectC2;
+		/* 
+		 * Если cos(a,b) = -1, то точка лежит между двумя концами отрезка.
+		 */
+		if(equals(angleC1, -1, EPSILON) && equals(angleC2, -1, EPSILON)) 
+			return true; 
+		/*
+		 * Если точка пересечения совпадает с координатами
+		 * начала или конца отрезка, то один, а возможно и два вектора будут нулевыми. 
+		 * Скалярное произведение нулевого вектора на любой вектор 
+		 * по определению равно 0, соответственно и произведение длин векторов
+		 * тоже будет равно 0. В этой ситуации, при расчете угла между векторами,
+		 * Java вернет значение NaN. Это частный случай и я тоже считаю его пересечением,
+		 * т.к. точка пересечения лежит на обоих отрезках.
+		 */
+		if((Double.isNaN(angleC1) || Double.isNaN(angleC2)) 
+				&& (scMultC1 <= 0 && scMultC2 <= 0))
+			return true;
 
-			if(Double.isNaN(angleC1) || Double.isNaN(angleC2))
-			
-			
-//		}
 		return false;
 	}
 	/*
@@ -433,6 +502,7 @@ public class opJavaTask3 {
     	for (int i = 0; i < tableModel.getRowCount(); i++) {
     		xCoordinates.add(Integer.valueOf(lines.getValueAt(i, 0).toString()));
     		xCoordinates.add(Integer.valueOf(lines.getValueAt(i, 2).toString()));
+    		
     		yCoordinates.add(Integer.valueOf(lines.getValueAt(i, 1).toString()));
     		yCoordinates.add(Integer.valueOf(lines.getValueAt(i, 3).toString()));
 			}
@@ -503,7 +573,6 @@ public class opJavaTask3 {
 			/*
 			 * Вывожу информацию о фигуре в текстовую область
 			 */
-			rectInfo.setText("");
 			rectInfo.setText("Задан прямоугольник с координатами:\nX="
 					+ rectangle.getX() + "\nY=" + rectangle.getY()
 					+ "\nШирина=" + rectangle.getWidth() + "\nВысота=" + rectangle.getHeight());
@@ -536,7 +605,7 @@ public class opJavaTask3 {
 			return;
 		}
 		/*
-		 * Для отображения элементов создаю экземпляр
+		 * Для отображения элементов, создаю экземпляр
 		 * пользовательской панели, в котором выполняются
 		 * все необходимые процедуры по подготовке и выводу
 		 * изображения и размещаю его на панель 
