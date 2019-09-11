@@ -249,6 +249,10 @@ public class opJavaTask3 {
 		intersectionInfo = new JTextArea();
 		scrollPane_2.setViewportView(intersectionInfo);
 	}
+	/*
+	 * Метод возвращает двухмерный массив, содержащий
+	 * координаты отрезков четырех сторон прямоугольника
+	 */
 	private double[][] getRectSides(){
 		
 		double[][] rectSides = new double[4][4];
@@ -275,24 +279,15 @@ public class opJavaTask3 {
 
 		return rectSides;
 	}
+	/*
+	 * Метод определяет, пересекает ли отрезок прямоугольник
+	 * и выводит сообщение в текстовую область
+	 */
 	private void getIntersections() {
-		
-		double[] line = new double[4];
-		double[] rectSide = new double[4];
-		
-		line[0] = 60;
-		line[1] = 80;
-		line[2] = 250;
-		line[3] = 190;
-		
-		rectSide[0] = 155;
-		rectSide[1] = 20;
-		rectSide[2] = 150;
-		rectSide[3] = 150;
-		
-		isIntersect(line, rectSide);
-		
-		
+		/*
+		 * Если отрезки и/или прямоугольник не заданы,
+		 * вы вывожу сообщение и вывожу
+		 */
 		if(lines.getModel().getRowCount() == 0 || rectangle == null) {
 			intersectionInfo.setText("Нет объектов для поиска пересечений");
 	    	return;
@@ -300,20 +295,33 @@ public class opJavaTask3 {
 		
 		intersectionInfo.setText("Следующие отрезки пересекают прямоугольную область:\n");
 		
-		DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
+		// Координаты отрезка
 		
-//		double[] line = new double[4];
-//		double[] rectSide = new double[4];
+		double[] line = new double[4];
+		
+		// Координаты стороны прямоугольника
+		
+		double[] rectSide = new double[4];
+		
+		// Координаты всех сторон прямоугольника
+		
 		double[][] allRectSides = getRectSides();
 
-		for (int i = 0; i < tableModel.getRowCount(); i++) {
-
+		for (int i = 0; i < lines.getRowCount(); i++) {
+			/*
+			 * Получаю координаты отрезка 
+			 */
 			line[0] = Double.valueOf(lines.getValueAt(i, 0).toString());
 			line[1] = Double.valueOf(lines.getValueAt(i, 1).toString());
 			line[2] = Double.valueOf(lines.getValueAt(i, 2).toString());
 			line[3] = Double.valueOf(lines.getValueAt(i, 3).toString());
 			
 			for (int j = 0; j < allRectSides.length; j++) {
+				/*
+				 * Последовательно проверяю наличие пересечения
+				 * со всеми сторонами прямоугольника, если пересечение
+				 * найдено, вывожу сообщение и завершаю проверку
+				 */
 				rectSide[0] = allRectSides[j][0];
 				rectSide[1] = allRectSides[j][1];
 				rectSide[2] = allRectSides[j][2];
@@ -327,9 +335,12 @@ public class opJavaTask3 {
 			}
 		}
 	}
+	/*
+	 * Метод ищет пересечение двух прямых и определяет
+	 * принадлежит ли найденная точка пересечения этим отрезкам
+	 */
 	private boolean isIntersect(double[] c1, double[] c2) {
 
-		
 		/*
 		 * Координаты первой прямой (C1)
 		 */
@@ -344,53 +355,75 @@ public class opJavaTask3 {
 		double y2 = c2[1];
 		double x3 = c2[2];
 		double y3 = c2[3];
-		
+		/*
+		 * Угловые коэффициенты
+		 */
 		double k1 = 0.0;
 		double k2 = 0.0;
-		
+
 		double b1 = 0.0;
 		double b2 = 0.0;
 		
-//		if(x0 >= x1) {
-//			double temp = x0;
-//			x0 = x1;
-//			x1 = temp;
-//			temp = y0;
-//			y0 = y1;
-//			y1 = temp;
-//		}
-//		if(x2 >= x3) {
-//			double temp = x2;
-//			x2 = x3;
-//			x3 = temp;
-//			temp = y2;
-//			y2 = y3;
-//			y3 = temp;
-//		}
-		
-		if (y0 != y1) {
-			k1 = (y1 - y0) / (x1 - x0);	
-		}
-		if (y2 != y3) {
-			k2 = (y3 - y2) / (x3 - x2);
-		}
-
 		/*
-		 * Если коэффициенты равны, то прямые параллельны или совпадают,
+		 * Точка пересечения
+		 */
+		double x = 0;
+		double y = 0;
+		/*
+		 * Если оба отрезка вертикальны, то прямые параллельны или совпадают,
 		 * соответственно точки пересечения нет или их бесконечное множество.
 		 * Второй случай считается частным и я расцениваю его как отсутствие
 		 * пересечения. 
-		 */
-		if (k1 == k2) return false;
-		
-		b1 = y0 - k1 * x0; 
-		b2 = y2 - k2 * x2;
-
+		 */ 
+		if (x0 == x1 && x2 == x3) return false;
 		/*
-		 * Точка пересечения двух отрезков (M)
+		 * Вычисляю точку пересечения, если первая прямая вертикальная
+		 * Если же x0=x1, то угловой коэффициент прямой бесконечен, 
+		 * а прямую определяет общее неполное уравнение прямой вида x-x0=0
 		 */
-		double x = (b2 - b1) / (k1 - k2);
-		double y = k1*x + b1;
+		if (x0 == x1) {
+			x = x0;
+			k2 = (y3 - y2) / (x3 - x2);
+			b2 = y2 - k2 * x2;
+			y = k2*x + b2;
+		/*
+		 * Вычисляю точку пересечения, если вторая прямая вертикальная
+		 */
+		} else if (x2 == x3) {
+			x = x2;
+			k1 = (y1 - y0) / (x1 - x0);	
+			b1 = y0 - k1 * x0;
+			y = k1*x + b1;
+		/*
+		 * Вычисляю точку пересечения, для общего случая
+		 */
+		} else {
+			/*
+			 * Если прямая горизонтальная, то угловой коэффициент = 0
+			 */
+			if (y0 != y1) {
+				k1 = (y1 - y0) / (x1 - x0);	
+			}
+			if (y2 != y3) {
+				k2 = (y3 - y2) / (x3 - x2);
+			}
+			/*
+			 * Если коэффициенты равны, то прямые параллельны или совпадают,
+			 * соответственно точки пересечения нет или их бесконечное множество.
+			 * Второй случай считается частным и я расцениваю его как отсутствие
+			 * пересечения. 
+			 */
+			if (k1 == k2) return false;
+			
+			b1 = y0 - k1 * x0; 
+			b2 = y2 - k2 * x2;
+
+			/*
+			 * Точка пересечения двух отрезков
+			 */
+			x = (b2 - b1) / (k1 - k2);
+			y = k1*x + b1;
+		}
 //----------------------------------------------------------------------------------
 		/*
 		 * Определяю в пределах погрешности, что точка пересечения лежит на прямых.
@@ -400,7 +433,9 @@ public class opJavaTask3 {
 		 * Если произведение = 0, то точка лежит на прямой.
 		 *		if(equals(((x - x0)*(y1 - y0) - (y - y0)*(x1 - x0)), 0, EPSILON)  
 		 *		&& equals(((x - x2)*(y3 - y2) - (y - y2)*(x3 - x2)), 0, EPSILON)) {
-		 *	}  
+		 *	}
+		 * В данной программе эта проверка не требуется т.к. найденная точка пересечения
+		 * по определению лежит на прямых
 		 */
 //----------------------------------------------------------------------------------
 		/*
@@ -413,7 +448,6 @@ public class opJavaTask3 {
 		 * cos(a,b) = (a*b) / |a|*|b| - т.е. отношение скалярного произведения
 		 * векторов к произведению длин векторов
 		 */
-
 		double scMultC1 = (x0 - x)*(x1 - x) + (y0 - y)*(y1 - y);
 		double lenVectC1 = Math.sqrt(Math.pow((x0 - x), 2) + Math.pow((y0 - y), 2))
 							* Math.sqrt(Math.pow((x1 - x), 2) + Math.pow((y1 - y), 2));
@@ -435,13 +469,9 @@ public class opJavaTask3 {
 		 * Скалярное произведение нулевого вектора на любой вектор 
 		 * по определению равно 0, соответственно и произведение длин векторов
 		 * тоже будет равно 0. В этой ситуации, при расчете угла между векторами,
-		 * Java вернет значение NaN. Это частный случай и я тоже считаю его пересечением,
-		 * т.к. точка пересечения лежит на обоих отрезках.
+		 * Java вернет значение NaN. Это частный случай и я не считаю его пересечением,
+		 * т.к. отрезок не пересекает периметр прямоугольника.
 		 */
-		if((Double.isNaN(angleC1) || Double.isNaN(angleC2)) 
-				&& (scMultC1 <= 0 && scMultC2 <= 0))
-			return true;
-
 		return false;
 	}
 	/*
@@ -475,10 +505,18 @@ public class opJavaTask3 {
 			return null;
 		}
 	}
+	/*
+	 * Метод возвращает максимальные размеры изображения
+	 * используя максимальные значения координат X и Y
+	 * добавленных элементов
+	 */
 	private int[] getMaxImageSize() {
 		
 		int[] imageSize = new int[2];
-		
+		/*
+		 * Для определения максимального значения по координате X
+		 * использую приоритетную очередь с компаратором
+		 */
 		Queue<Integer> xCoordinates = new PriorityQueue<>(new Comparator<Integer>() {
 			
             @Override
@@ -486,7 +524,10 @@ public class opJavaTask3 {
                 return o2.compareTo(o1);
             }
         });
-		
+		/*
+		 * Для определения максимального значения по координате Y
+		 * использую приоритетную очередь с компаратором
+		 */
 		Queue<Integer> yCoordinates = new PriorityQueue<>(new Comparator<Integer>() {
 			
             @Override
@@ -498,19 +539,31 @@ public class opJavaTask3 {
         if(lines.getModel().getRowCount() != 0) {
 	        
     	DefaultTableModel tableModel = (DefaultTableModel) lines.getModel();
-    	
+
     	for (int i = 0; i < tableModel.getRowCount(); i++) {
+        	/*
+        	 * Добавляю все значения X в очередь
+        	 */
     		xCoordinates.add(Integer.valueOf(lines.getValueAt(i, 0).toString()));
     		xCoordinates.add(Integer.valueOf(lines.getValueAt(i, 2).toString()));
-    		
+        	/*
+        	 * Добавляю все значения Y в очередь
+        	 */
     		yCoordinates.add(Integer.valueOf(lines.getValueAt(i, 1).toString()));
     		yCoordinates.add(Integer.valueOf(lines.getValueAt(i, 3).toString()));
 			}
         }
         if(rectangle != null) {
+        	/*
+        	 * Добавляю максимальные значения 
+        	 * координат X и Y прямоугольника
+        	 */
         	xCoordinates.add((int)rectangle.getWidth() + (int)rectangle.getX());
     		yCoordinates.add((int)rectangle.getHeight() + (int)rectangle.getY());
         }
+        /*
+         * Получаю максимальные значения X и Y
+         */
         imageSize[0] = xCoordinates.poll();
         imageSize[1] = yCoordinates.poll();
 		return imageSize;
