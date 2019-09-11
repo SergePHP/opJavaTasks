@@ -160,7 +160,7 @@ public class opJavaTask3 {
 		label.setBounds(12, 185, 345, 16);
 		frame.getContentPane().add(label);
 		
-		JLabel label_2 = new JLabel("Нижний левый угол прямоугольной области:");
+		JLabel label_2 = new JLabel("Нижний правый угол прямоугольной области:");
 		label_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		label_2.setBounds(12, 273, 345, 16);
 		frame.getContentPane().add(label_2);
@@ -202,7 +202,7 @@ public class opJavaTask3 {
 		frame.getContentPane().add(label_6);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(354, 188, 294, 158);
+		scrollPane_1.setBounds(363, 188, 285, 158);
 		frame.getContentPane().add(scrollPane_1);
 		
 		rectInfo = new JTextArea();
